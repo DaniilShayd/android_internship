@@ -2,6 +2,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
@@ -24,34 +25,51 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar {
-                    tabs.forEachIndexed { index, tab ->
-                        NavigationBarItem(
-                            selected = selectedTab == index,
-                            onClick = {
-                                onTabIconClick(
-                                    selectedTab = selectedTab,
-                                    index = index,
-                                    navController = navController,
-                                    tab = tab,
-                                )
-                            },
-                            icon = {
-                                Icon(
-                                    tab.icon, contentDescription = tab.title
-                                )
-                            },
-                            label = {
-                                Text(tab.title)
-                            }
-                        )
-                    }
-                }
+                BottomNavBar(
+                    selectedTab = selectedTab,
+                    tabs = tabs,
+                    navController = navController
+                )
             }
         }
     ) { paddingValues ->
-        MainNavHost(navController = navController, modifier = Modifier.padding(paddingValues)
+        MainNavHost(
+            navController = navController, modifier = Modifier.padding(
+                paddingValues
+            )
         )
+    }
+}
+
+@Composable
+fun BottomNavBar(
+    selectedTab: Int, tabs: List<TabItem>, navController: NavHostController
+) {
+    NavigationBar {
+        tabs.forEachIndexed { index, tab ->
+            NavigationBarItem(
+                selected = selectedTab == index,
+                onClick = {
+                    onTabIconClick(
+                        selectedTab = selectedTab,
+                        index = index,
+                        navController = navController,
+                        tab = tab,
+                    )
+                },
+                icon = {
+                    Icon(
+                        tab.icon, contentDescription = tab.title,
+
+                        )
+                },
+                label = {
+                    Text(
+                        tab.title, textAlign = TextAlign.Center
+                    )
+                }
+            )
+        }
     }
 }
 

@@ -1,60 +1,70 @@
 package com.example.androidinternship.ui.screens.album
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
-import com.example.androidinternship.R
-import com.example.androidinternship.data.Album
-import androidx.compose.ui.*
-import androidx.compose.ui.layout.ContentScale
-import com.example.androidinternship.resources.UIDimentions
+import com.example.androidinternship.data.albums
+import com.example.androidinternship.resources.Localization.ALBUM_SCREEN
+import com.example.androidinternship.ui.components.cards.UIImage
 
 @Composable
 fun AlbumScreen(navController: NavController, albumId: Int) {
-    val albums = remember {
-        listOf(
-            Album(
-                1, "Природа", listOf(
-                    R.drawable.photo1, R.drawable.photo2, R.drawable.photo3
-                )
-            ),
-            Album(
-                2, "Города", listOf(
-                    R.drawable.photo4, R.drawable.photo5, R.drawable.photo6
-                )
-            ),
-            Album(
-                3, "Архитектура", listOf(
-                    R.drawable.photo7, R.drawable.photo8, R.drawable.photo9
-                )
-            )
+    Scaffold(
+        topBar = { AlbumScreenTopBar(navController) }
+    ) { padding ->
+        AlbumContent(
+            modifier = Modifier.padding(padding),
+            navController = navController,
+            albumId = albumId
         )
     }
+}
 
+@Composable
+private fun AlbumContent(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    albumId: Int
+) {
+    val albums = remember { albums }
     val album = albums.find { it.id == albumId } ?: return
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(128.dp),
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         items(album.photos) { photoRes ->
-            Image(
-                painter = painterResource(photoRes),
-                contentDescription = null,
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .padding(UIDimentions.smallestPadding)
-                    .clickable {
-                        val photoIndex = album.photos.indexOf(photoRes)
-                        navController.navigate("photo/$photoIndex")
-                    },
-                contentScale = ContentScale.Crop
+            UIImage(
+                photoRes = photoRes,
+                onClick = {
+                    val photoIndex = album.photos.indexOf(photoRes)
+                    navController.navigate("photo/$photoIndex")
+                }
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AlbumScreenTopBar(navController: NavController) {
+    TopAppBar(
+        title = {
+            Text(ALBUM_SCREEN)
+        },
+        navigationIcon = {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBackIosNew,
+                    contentDescription = "Back"
+                )
+            }
+        }
+    )
 }

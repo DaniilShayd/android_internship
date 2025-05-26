@@ -5,5 +5,6 @@ data class User(
     val nickname: String,
     val name: String,
     val address: String,
-    val phoneNumber: String
+    val phoneNumber: String,
+    val comments: List<Comment> = emptyList()
 )

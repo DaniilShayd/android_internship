@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.Color
 import com.example.androidinternship.data.Post
+import com.example.androidinternship.resources.Localization.LIKE
 import com.example.androidinternship.resources.UIDimentions
 
 
@@ -29,7 +30,7 @@ fun PostCardBottomInfo(post: Post, onLikeClick: () -> Unit) {
         ) {
             Icon(
                 imageVector = if (post.isLiked) Icons.Filled.Favorite else Icons.Outlined.Favorite,
-                contentDescription = "Like",
+                contentDescription = LIKE,
                 tint = if (post.isLiked) Color.Red else MaterialTheme.colorScheme.onSurface.copy(
                     alpha = 0.6f
                 )

@@ -19,7 +19,7 @@ fun UsersScreen(navController: NavController) {
             .padding(bottom = 56.dp)
     ) {
         items(users) { user ->
-            UserListCard(user = user, onClick = {
+            UserListCard(user = user,onClick = {
                 navController.navigate("user_detail/${user.id}")
             })
         }

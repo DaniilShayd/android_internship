@@ -1,5 +1,7 @@
 package com.example.androidinternship.data
 
+import com.example.androidinternship.R
+
 val posts = listOf(
     Post(
         id = 1,
@@ -101,7 +103,61 @@ val posts = listOf(
 )
 
 val users = listOf(
-    User(1, "@john_doe", "John Doe", "123 Main St", "+1234567890"),
-    User(2, "@jane_smith", "Jane Smith", "456 Elm St", "+0987654321"),
-    User(3, "@alice_johnson", "Alice Johnson", "789 Oak St", "+1122334455")
+    User(
+        id = 1,
+        nickname = "@john_doe",
+        name = "John Doe",
+        address = "123 Main St",
+        phoneNumber = "+1234567890",
+        comments = listOf(
+            Comment("Admin", "Great user!"),
+            Comment("User123", "Always helpful in discussions."),
+            Comment("Guest", "Nice to have around."),
+            Comment("Support", "Quick to respond.")
+        )
+    ),
+    User(
+        id = 2,
+        nickname = "@jane_smith",
+        name = "Jane Smith",
+        address = "456 Elm St",
+        phoneNumber = "+0987654321",
+        comments = listOf(
+            Comment("Moderator", "Active participant."),
+            Comment("Alex", "Shares valuable insights."),
+            Comment("Lily", "Good at problem solving."),
+            Comment("Admin", "Reliable contributor.")
+        )
+    ),
+    User(
+        id = 3,
+        nickname = "@alice_johnson",
+        name = "Alice Johnson",
+        address = "789 Oak St",
+        phoneNumber = "+1122334455",
+        comments = listOf(
+            Comment("Admin", "Helpful and friendly."),
+            Comment("Mike", "Very polite and responsive."),
+            Comment("Sarah", "Enjoyed working with her."),
+            Comment("Moderator", "Consistently positive attitude.")
+        )
+    )
+)
+
+val albums = listOf(
+    Album(
+        1, "Природа", listOf(
+            R.drawable.photo1, R.drawable.photo2, R.drawable.photo3
+        )
+    ),
+    Album(
+        2, "Города", listOf(
+            R.drawable.photo4, R.drawable.photo5, R.drawable.photo6
+        )
+    ),
+    Album(
+        3, "Архитектура", listOf(
+            R.drawable.photo7, R.drawable.photo8, R.drawable.photo9
+        )
+    )
 )

@@ -11,6 +11,12 @@ import androidx.compose.ui.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import com.example.androidinternship.navigation.NavRoutes
+import com.example.androidinternship.resources.Localization.ADD_TODO
+import com.example.androidinternship.resources.StateNames.editedTodoIndexState
+import com.example.androidinternship.resources.StateNames.editedTodoState
+import com.example.androidinternship.resources.StateNames.editingTodoIndexState
+import com.example.androidinternship.resources.StateNames.editingTodoState
+import com.example.androidinternship.resources.StateNames.newTodoState
 import com.example.androidinternship.resources.UIDimentions
 import com.example.androidinternship.ui.components.cards.TodoCard
 
@@ -20,15 +26,38 @@ fun TodosScreen(
     savedStateHandle: SavedStateHandle,
 ) {
     var todos by rememberSaveable { mutableStateOf(emptyList<String>()) }
+    var editingIndex by rememberSaveable { mutableStateOf(-1) }
 
     val newTodo by remember {
-        derivedStateOf { savedStateHandle.get<String>("newTodo") }
+        derivedStateOf { savedStateHandle.get<String>(newTodoState) }
+    }
+
+    val editedTodo by remember {
+        derivedStateOf {
+            savedStateHandle.get<String>(editedTodoState) to
+                    savedStateHandle.get<Int>(editedTodoIndexState)
+        }
     }
 
     LaunchedEffect(newTodo) {
         newTodo?.let {
             todos = todos + it
-            savedStateHandle.remove<String>("newTodo")
+            savedStateHandle.remove<String>(newTodoState)
+        }
+    }
+
+    LaunchedEffect(editedTodo) {
+        editedTodo.let { (editedText, index) ->
+            index?.let { idx ->
+                if (idx >= 0 && idx < todos.size && !editedText.isNullOrEmpty()) {
+                    todos = todos.toMutableList().apply {
+                        set(idx, editedText)
+                    }
+                    savedStateHandle.remove<String>(editedTodoState)
+                    savedStateHandle.remove<Int>(editedTodoIndexState)
+                    editingIndex = -1
+                }
+            }
         }
     }
 
@@ -37,7 +66,7 @@ fun TodosScreen(
             FloatingActionButton(onClick = {
                 navController.navigate(NavRoutes.TODO_DETAIL)
             }) {
-                Icon(Icons.Default.Add, contentDescription = "Add Todo")
+                Icon(Icons.Default.Add, contentDescription = ADD_TODO)
             }
         }
     ) { padding ->
@@ -47,17 +76,20 @@ fun TodosScreen(
                 .padding(padding)
                 .padding(UIDimentions.mediumPadding)
         ) {
-            items(todos) { todo ->
+            itemsIndexed(todos) { index, todo ->
                 TodoCard(
                     todo = todo,
                     onDelete = {
-                        todos = todos.filter {
-                            it != todo
-                        }
+                        todos = todos.filterIndexed { i, _ -> i != index }
+                    },
+                    onEdit = {
+                        editingIndex = index
+                        savedStateHandle[editingTodoState] = todo
+                        savedStateHandle[editingTodoIndexState] = index
+                        navController.navigate(NavRoutes.TODO_DETAIL)
                     }
                 )
             }
         }
     }
 }
-

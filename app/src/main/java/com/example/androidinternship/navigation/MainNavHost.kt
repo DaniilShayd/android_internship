@@ -38,6 +38,7 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
             ) { backStackEntry ->
                 PostScreen(
                     postId = backStackEntry.arguments?.getInt(NavElements.POST_ID) ?: 0,
+                    navController = navController
                 )
             }
         }
@@ -53,12 +54,14 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
             }
             composable(NavRoutes.ALBUM) {
                 AlbumScreen(
-                    navController, it.arguments?.getString(NavElements.ALBUM_ID)?.toInt() ?: 0
+                    navController = navController,
+                    albumId = it.arguments?.getString(NavElements.ALBUM_ID)?.toInt() ?: 0
                 )
             }
             composable(NavRoutes.PHOTO) {
                 PhotoScreen(
-                    it.arguments?.getString(NavElements.PHOTO_ID)?.toInt() ?: 0
+                    navController = navController,
+                    photoId = it.arguments?.getString(NavElements.PHOTO_ID)?.toInt() ?: 0
                 )
             }
         }
@@ -76,8 +79,7 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
             composable(NavRoutes.TODO_DETAIL) {
                 CreateTodoScreen(
                     navController = navController,
-
-                    )
+                )
             }
         }
 
@@ -97,7 +99,9 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
                 )
             ) { backStackEntry ->
                 val userId = backStackEntry.arguments?.getInt(NavElements.USER_ID) ?: 0
-                UserScreen(userId)
+                UserScreen(
+                    userId = userId, navController = navController,
+                )
             }
         }
     }
