@@ -1,47 +1,51 @@
 package com.example.androidinternship.navigation
 
-
-import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.androidinternship.resources.Localization.ALBUMS_TAB
-import com.example.androidinternship.resources.Localization.POSTS_TAB
-import com.example.androidinternship.resources.Localization.TODOS_TAB
-import com.example.androidinternship.resources.Localization.USERS_TAB
-
+import androidx.compose.ui.res.stringResource
+import com.example.androidinternship.R
+import androidx.compose.material.icons.Icons
+import androidx.compose.runtime.Composable
 
 sealed class TabItem(
     val route: String,
     val title: String,
     val icon: ImageVector
 ) {
-    data object Posts : TabItem(
+
+    class Posts(title: String) : TabItem(
         route = NavRoutes.POSTS_MAIN,
-        title = POSTS_TAB,
+        title = title,
         icon = Icons.Default.FormatListNumbered
     )
 
-    data object Photos : TabItem(
+    class Photos(title: String) : TabItem(
         route = NavRoutes.ALBUMS_MAIN,
-        title = ALBUMS_TAB,
+        title = title,
         icon = Icons.Default.Image
     )
 
-    data object Todos : TabItem(
+    class Todos(title: String) : TabItem(
         route = NavRoutes.TODOS_MAIN,
-        title = TODOS_TAB,
+        title = title,
         icon = Icons.Default.Check
     )
 
-    data object Users : TabItem(
+    class Users(title: String) : TabItem(
         route = NavRoutes.USERS_MAIN,
-        title = USERS_TAB,
+        title = title,
         icon = Icons.Default.Person
     )
 
     companion object {
+        @Composable
         fun getTabs(): List<TabItem> {
-            return listOf(Posts, Photos, Todos, Users)
+            return listOf(
+                Posts(stringResource(R.string.posts_tab)),
+                Photos(stringResource(R.string.albums_tab)),
+                Todos(stringResource(R.string.todos_tab)),
+                Users(stringResource(R.string.users_tab))
+            )
         }
     }
 }

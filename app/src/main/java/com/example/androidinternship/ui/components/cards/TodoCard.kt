@@ -6,9 +6,9 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
-import com.example.androidinternship.resources.Localization.DELETE
-import com.example.androidinternship.resources.Localization.EDIT
-import com.example.androidinternship.resources.UIDimentions
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import com.example.androidinternship.R
 
 @Composable
 fun TodoCard(
@@ -19,7 +19,7 @@ fun TodoCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(UIDimentions.smallPadding),
+            .padding(dimensionResource(R.dimen.padding_small)),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
@@ -27,7 +27,7 @@ fun TodoCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(UIDimentions.mediumPadding),
+                .padding(dimensionResource(R.dimen.padding_medium)),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -41,14 +41,14 @@ fun TodoCard(
                 IconButton(onClick = onEdit) {
                     Icon(
                         Icons.Default.Edit,
-                        contentDescription = EDIT,
+                        contentDescription = stringResource(R.string.edit),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
                 IconButton(onClick = onDelete) {
                     Icon(
                         Icons.Default.Check,
-                        contentDescription = DELETE,
+                        contentDescription = stringResource(R.string.delete),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }

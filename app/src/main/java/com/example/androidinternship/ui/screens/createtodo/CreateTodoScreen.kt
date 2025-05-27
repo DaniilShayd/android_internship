@@ -8,16 +8,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.androidinternship.extentions.hideKeyboardOnTap
-import com.example.androidinternship.resources.Localization.ADD_TODO
-import com.example.androidinternship.resources.Localization.BACK
-import com.example.androidinternship.resources.Localization.EDIT_TODO
-import com.example.androidinternship.resources.Localization.SAVE_CHANGES
 import com.example.androidinternship.resources.StateNames.editedTodoIndexState
 import com.example.androidinternship.resources.StateNames.editedTodoState
 import com.example.androidinternship.resources.StateNames.editingTodoIndexState
 import com.example.androidinternship.resources.StateNames.editingTodoState
 import com.example.androidinternship.resources.StateNames.newTodoState
-import com.example.androidinternship.resources.UIDimentions
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import com.example.androidinternship.R
 import com.example.androidinternship.ui.composables.UIButton
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,11 +34,11 @@ fun CreateTodoScreen(navController: NavHostController) {
     Scaffold(modifier = Modifier.hideKeyboardOnTap(), topBar = {
         TopAppBar(title = {
             Text(
-                if (editingIndex != null) EDIT_TODO else ADD_TODO
+                if (editingIndex != null) stringResource(R.string.edit_todo) else stringResource(R.string.add_todo)
             )
         }, navigationIcon = {
             IconButton({ navController.popBackStack() }) {
-                Icon(Icons.Default.ArrowBackIosNew, contentDescription = BACK )
+                Icon(Icons.Default.ArrowBackIosNew, contentDescription = stringResource(R.string.back) )
             }
         })
     }) { padding ->
@@ -48,18 +46,18 @@ fun CreateTodoScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(UIDimentions.mediumPadding)
+                .padding(dimensionResource(R.dimen.padding_medium))
         ) {
             OutlinedTextField(value = todoText,
                 onValueChange = { todoText = it },
-                label = { ADD_TODO },
+                label = { stringResource(R.string.add_todo) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
 
-            Spacer(modifier = Modifier.height(UIDimentions.mediumPadding))
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
 
-            UIButton(text = if (editingIndex != null) SAVE_CHANGES else ADD_TODO, onClick = {
+            UIButton(text = if (editingIndex != null) stringResource(R.string.save_changes) else stringResource(R.string.add_todo), onClick = {
                 if (todoText.isNotBlank()) {
                     if (editingIndex != null) {
 

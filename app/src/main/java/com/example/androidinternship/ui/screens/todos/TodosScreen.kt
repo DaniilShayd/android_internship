@@ -11,13 +11,14 @@ import androidx.compose.ui.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import com.example.androidinternship.navigation.NavRoutes
-import com.example.androidinternship.resources.Localization.ADD_TODO
 import com.example.androidinternship.resources.StateNames.editedTodoIndexState
 import com.example.androidinternship.resources.StateNames.editedTodoState
 import com.example.androidinternship.resources.StateNames.editingTodoIndexState
 import com.example.androidinternship.resources.StateNames.editingTodoState
 import com.example.androidinternship.resources.StateNames.newTodoState
-import com.example.androidinternship.resources.UIDimentions
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import com.example.androidinternship.R
 import com.example.androidinternship.ui.components.cards.TodoCard
 
 @Composable
@@ -66,7 +67,7 @@ fun TodosScreen(
             FloatingActionButton(onClick = {
                 navController.navigate(NavRoutes.TODO_DETAIL)
             }) {
-                Icon(Icons.Default.Add, contentDescription = ADD_TODO)
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_todo))
             }
         }
     ) { padding ->
@@ -74,7 +75,7 @@ fun TodosScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(UIDimentions.mediumPadding)
+                .padding(dimensionResource(R.dimen.padding_medium))
         ) {
             itemsIndexed(todos) { index, todo ->
                 TodoCard(

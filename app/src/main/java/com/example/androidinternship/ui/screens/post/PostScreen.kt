@@ -13,11 +13,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.example.androidinternship.data.*
 import com.example.androidinternship.resources.AppSettings.COMMENTS_SHOW_LIMIT
-import com.example.androidinternship.resources.Localization.BACK
-import com.example.androidinternship.resources.Localization.HIDE_COMMENTS
-import com.example.androidinternship.resources.Localization.POST_NOT_FOUND
-import com.example.androidinternship.resources.Localization.SHOW_COMMENTS
-import com.example.androidinternship.resources.UIDimentions
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import com.example.androidinternship.R
 import com.example.androidinternship.ui.components.PostCardBottomInfo
 import com.example.androidinternship.ui.components.cards.CommentCard
 
@@ -75,7 +73,7 @@ private fun PostScreenTopBar(navController: NavController, post: Post) {
             }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBackIosNew,
-                    contentDescription = BACK
+                    contentDescription = stringResource(R.string.back)
                 )
             }
         }
@@ -91,7 +89,7 @@ private fun PostNotFound() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = POST_NOT_FOUND,
+            text = stringResource(R.string.post_not_found),
             style = MaterialTheme.typography.titleMedium
         )
     }
@@ -105,7 +103,7 @@ private fun PostContent(post: Post, onLikeClick: () -> Unit) {
 @Composable
 private fun PostList(post: Post, onLikeClick: () -> Unit) {
     LazyColumn(
-        modifier = Modifier.padding(UIDimentions.mediumPadding)
+        modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
     ) {
         item {
             PostDetails(post = post, onLikeClick = onLikeClick)
@@ -130,7 +128,7 @@ private fun ExpandableComments(comments: List<Comment>) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = if (expanded) HIDE_COMMENTS else SHOW_COMMENTS
+            text = if (expanded) stringResource(R.string.hide_comments) else stringResource(R.string.show_comments)
         )
     }
 
@@ -149,12 +147,12 @@ fun PostDetails(post: Post, onLikeClick: () -> Unit) {
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
-        Spacer(modifier = Modifier.height(UIDimentions.smallSpacerHeight))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacer_height_small)))
         Text(
             text = post.description,
             style = MaterialTheme.typography.bodyMedium
         )
-        Spacer(modifier = Modifier.height(UIDimentions.mediumSpacerHeight))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacer_height_medium)))
         PostCardBottomInfo(post = post, onLikeClick = onLikeClick)
     }
 }

@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
+import com.example.androidinternship.R
 import androidx.compose.ui.res.painterResource
-import com.example.androidinternship.resources.UIDimentions
-
 @Composable
 fun UIImage(photoRes: Int, onClick: () -> Unit) {
     Image(
@@ -17,7 +17,7 @@ fun UIImage(photoRes: Int, onClick: () -> Unit) {
         contentDescription = null,
         modifier = Modifier
             .aspectRatio(1f)
-            .padding(UIDimentions.smallestPadding)
+            .padding(dimensionResource(R.dimen.padding_smallest))
             .clickable {
                 onClick();
             },

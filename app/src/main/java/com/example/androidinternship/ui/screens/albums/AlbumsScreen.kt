@@ -10,7 +10,8 @@ import androidx.compose.ui.Modifier
 import com.example.androidinternship.ui.components.cards.AlbumCard
 import androidx.navigation.NavController
 import com.example.androidinternship.data.albums
-import com.example.androidinternship.resources.UIDimentions
+import androidx.compose.ui.res.dimensionResource
+import com.example.androidinternship.R
 
 
 @Composable
@@ -18,7 +19,7 @@ fun AlbumsScreen(navController: NavController) {
     val albums by remember { mutableStateOf( albums) }
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        Spacer(modifier = Modifier.height(UIDimentions.largePadding))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_large)))
         Box(
             modifier = Modifier
                 .fillMaxSize()

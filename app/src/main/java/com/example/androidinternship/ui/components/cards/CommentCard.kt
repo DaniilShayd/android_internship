@@ -4,26 +4,27 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import com.example.androidinternship.R
 import com.example.androidinternship.data.Comment
-import com.example.androidinternship.resources.UIDimentions
 
 @Composable
 fun CommentCard(comment: Comment) {
     Card(
         modifier = Modifier
-            .padding(vertical = UIDimentions.smallestPadding)
+            .padding(vertical = dimensionResource(R.dimen.padding_smallest))
             .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(UIDimentions.smallElevation)
+        elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small))
     ) {
         Column(
-            modifier = Modifier.padding(UIDimentions.mediumPadding)
+            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
         ) {
             Text(
                 text = comment.userName,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
-            Spacer(modifier = Modifier.height(UIDimentions.smallestPadding))
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_smallest)))
             Text(text = comment.text, style = MaterialTheme.typography.bodyMedium)
         }
     }

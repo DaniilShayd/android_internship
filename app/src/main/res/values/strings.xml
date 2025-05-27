@@ -1,3 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">androidInternship</string>
+    <!-- Общие строки -->
+    <string name="back">Назад</string>
+    <string name="photos">Фотографий:</string>
+    <string name="comments">Комментарии:</string>
+    <string name="address">Адрес:</string>
+    <string name="number">Номер:</string>
+    <string name="delete">Удалить</string>
+    <string name="edit">Изменить</string>
+    <string name="like">Лайк</string>
+
+    <!-- Заметки -->
+    <string name="add_todo">Добавить заметку</string>
+    <string name="save_changes">Сохранить изменения</string>
+    <string name="edit_todo">Изменить заметку</string>
+
+    <!-- Сообщения -->
+    <string name="post_not_found">Пост не найден</string>
+    <string name="user_not_found">Пользователь не найден</string>
+
+    <!-- Комментарии -->
+    <string name="hide_comments">Скрыть комментарии</string>
+    <string name="show_comments">Показать все комментарии</string>
+
+    <!-- Табы -->
+    <string name="posts_tab">Посты</string>
+    <string name="albums_tab">Альбомы</string>
+    <string name="todos_tab">Заметки</string>
+    <string name="users_tab">Пользователи</string>
+
+    <!-- Экранные заголовки -->
+    <string name="album_screen">Экран альбома</string>
+    <string name="image_screen">Фото</string>
+    <string name="app_name">internship</string>
 </resources>

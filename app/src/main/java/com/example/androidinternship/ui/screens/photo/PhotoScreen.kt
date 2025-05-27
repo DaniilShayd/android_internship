@@ -10,10 +10,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.androidinternship.R
-import com.example.androidinternship.resources.Localization.BACK
-import com.example.androidinternship.resources.Localization.IMAGE_SCREEN
 import net.engawapg.lib.zoomable.*
 
 @Composable
@@ -51,7 +50,7 @@ private fun rememberPhotoList(): List<Int> = remember {
 private fun PhotoScreenTopBar(navController: NavController) {
     TopAppBar(
         title = {
-            Text(IMAGE_SCREEN)
+            Text(stringResource(R.string.image_screen))
         },
         navigationIcon = {
             IconButton(onClick = {
@@ -59,7 +58,7 @@ private fun PhotoScreenTopBar(navController: NavController) {
             }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBackIosNew,
-                    contentDescription = BACK
+                    contentDescription = stringResource(R.string.back)
                 )
             }
         }

@@ -10,9 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.androidinternship.data.User
-import com.example.androidinternship.resources.Localization.ADDRESS
-import com.example.androidinternship.resources.Localization.NUMBER
-import com.example.androidinternship.resources.UIDimentions
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import com.example.androidinternship.R
 
 @Composable
 fun UserListCard(
@@ -24,8 +24,8 @@ fun UserListCard(
         modifier = modifier
             .fillMaxWidth()
             .padding(
-                horizontal = UIDimentions.mediumPadding,
-                vertical = UIDimentions.smallPadding
+                horizontal = dimensionResource(R.dimen.padding_medium),
+                vertical = dimensionResource(R.dimen.padding_small)
             )
             .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -37,11 +37,11 @@ fun UserListCard(
 @Composable
 private fun UserCardContent(user: User) {
     Row(
-        modifier = Modifier.padding(UIDimentions.mediumPadding),
+        modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         UserAvatar(user.name)
-        Spacer(modifier = Modifier.width(UIDimentions.mediumSmallPadding))
+        Spacer(modifier = Modifier.width(dimensionResource(R.dimen.padding_medium_small)))
         UserInfo(user)
     }
 }
@@ -70,7 +70,7 @@ private fun UserInfo(user: User) {
     Column {
         UserName(user.name)
         UserNickname(user.nickname)
-        Spacer(modifier = Modifier.height(UIDimentions.smallestPadding))
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_smallest)))
         UserAddress(user.address)
         UserPhone(user.phoneNumber)
     }
@@ -95,7 +95,7 @@ private fun UserNickname(nickname: String) {
 @Composable
 private fun UserAddress(address: String) {
     Text(
-        text = "$ADDRESS $address",
+        text = "${stringResource(R.string.address)} $address",
         style = MaterialTheme.typography.bodyMedium
     )
 }
@@ -103,7 +103,7 @@ private fun UserAddress(address: String) {
 @Composable
 private fun UserPhone(phoneNumber: String) {
     Text(
-        text = "$NUMBER $phoneNumber",
+        text = "${stringResource(R.string.number)} $phoneNumber",
         style = MaterialTheme.typography.bodyMedium
     )
 }

@@ -7,10 +7,11 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.androidinternship.R
 import com.example.androidinternship.data.albums
-import com.example.androidinternship.resources.Localization.ALBUM_SCREEN
 import com.example.androidinternship.ui.components.cards.UIImage
 
 @Composable
@@ -56,7 +57,7 @@ private fun AlbumContent(
 private fun AlbumScreenTopBar(navController: NavController) {
     TopAppBar(
         title = {
-            Text(ALBUM_SCREEN)
+            Text(stringResource(R.string.album_screen))
         },
         navigationIcon = {
             IconButton(onClick = { navController.popBackStack() }) {

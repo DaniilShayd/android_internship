@@ -7,16 +7,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.androidinternship.R
 import com.example.androidinternship.data.User
 import com.example.androidinternship.data.users
-import com.example.androidinternship.resources.Localization.COMMENTS
-import com.example.androidinternship.resources.Localization.HIDE_COMMENTS
-import com.example.androidinternship.resources.Localization.SHOW_COMMENTS
-import com.example.androidinternship.resources.Localization.USER_NOT_FOUND
-import com.example.androidinternship.resources.UIDimentions
+import com.example.androidinternship.resources.*
 import com.example.androidinternship.ui.components.NestedScreenAppBar
 import com.example.androidinternship.ui.components.cards.CommentCard
 import com.example.androidinternship.ui.composables.UIButton
@@ -101,10 +100,10 @@ private fun UserCommentSection(user: User) {
         mutableStateOf(false)
     }
 
-    Column(modifier = Modifier.padding(UIDimentions.mediumPadding)) {
-        Spacer(modifier = Modifier.height(UIDimentions.mediumLargePadding))
+    Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium_large)))
         Text(
-            text = COMMENTS,
+            text = stringResource(R.string.comments),
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Start,
             modifier = Modifier.fillMaxWidth()
@@ -117,10 +116,10 @@ private fun UserCommentSection(user: User) {
                 CommentCard(comment = comment)
             }
 
-            Spacer(modifier = Modifier.height(UIDimentions.mediumLargePadding))
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium_large)))
 
             UIButton(
-                text = SHOW_COMMENTS,
+                text = stringResource(R.string.show_comments),
                 onClick = { commentsIsOpened = true }
             )
         } else {
@@ -128,10 +127,10 @@ private fun UserCommentSection(user: User) {
                 CommentCard(comment = comment)
             }
 
-            Spacer(modifier = Modifier.height(UIDimentions.mediumLargePadding))
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium_large)))
 
             UIButton(
-                text = HIDE_COMMENTS,
+                text = stringResource(R.string.hide_comments),
                 onClick = { commentsIsOpened = false }
             )
         }
@@ -142,7 +141,7 @@ private fun UserCommentSection(user: User) {
 private fun UserNotFound() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(
-            text = USER_NOT_FOUND,
+            text = stringResource(R.string.user_not_found),
             style = MaterialTheme.typography.headlineMedium,
             textAlign = TextAlign.Center
         )

@@ -20,7 +20,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         }
     }
 
-    val selectedTab = getTabIndex(currentRoute)
+    val selectedTab = getTabIndex(currentRoute, tabs)
 
     Scaffold(
         bottomBar = {
@@ -34,16 +34,17 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         }
     ) { paddingValues ->
         MainNavHost(
-            navController = navController, modifier = Modifier.padding(
-                paddingValues
-            )
+            navController = navController,
+            modifier = Modifier.padding(paddingValues)
         )
     }
 }
 
 @Composable
 fun BottomNavBar(
-    selectedTab: Int, tabs: List<TabItem>, navController: NavHostController
+    selectedTab: Int,
+    tabs: List<TabItem>,
+    navController: NavHostController
 ) {
     NavigationBar {
         tabs.forEachIndexed { index, tab ->
@@ -59,13 +60,14 @@ fun BottomNavBar(
                 },
                 icon = {
                     Icon(
-                        tab.icon, contentDescription = tab.title,
-
-                        )
+                        imageVector = tab.icon,
+                        contentDescription = tab.title
+                    )
                 },
                 label = {
                     Text(
-                        tab.title, textAlign = TextAlign.Center
+                        text = tab.title,
+                        textAlign = TextAlign.Center
                     )
                 }
             )
@@ -73,14 +75,10 @@ fun BottomNavBar(
     }
 }
 
-private fun getTabIndex(route: String?): Int {
-    return when {
-        route?.contains(TabItem.Posts.route) == true -> 0
-        route?.contains(TabItem.Photos.route) == true -> 1
-        route?.contains(TabItem.Todos.route) == true -> 2
-        route?.contains(TabItem.Users.route) == true -> 3
-        else -> 0
-    }
+private fun getTabIndex(route: String?, tabs: List<TabItem>): Int {
+    return tabs.indexOfFirst { tab ->
+        route?.startsWith(tab.route) == true
+    }.takeIf { it != -1 } ?: 0
 }
 
 private fun onTabIconClick(
@@ -89,9 +87,8 @@ private fun onTabIconClick(
     navController: NavHostController,
     tab: TabItem
 ) {
-    if (selectedTab == index) {
-        return
-    }
+    if (selectedTab == index) return
+
     navController.navigate(tab.route) {
         popUpTo(navController.graph.findStartDestination().id) {
             saveState = true
