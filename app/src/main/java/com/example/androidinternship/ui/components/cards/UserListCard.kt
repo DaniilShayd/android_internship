@@ -6,13 +6,24 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import com.example.androidinternship.data.User
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.toSize
 import com.example.androidinternship.R
+import com.example.androidinternship.animation.LocalSharedElementState
 
 @Composable
 fun UserListCard(
@@ -20,37 +31,48 @@ fun UserListCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val state = LocalSharedElementState.current
+    var itemSize by remember { mutableStateOf(Size.Zero) }
+    var itemPosition by remember { mutableStateOf(Offset.Zero) }
+
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = dimensionResource(R.dimen.padding_medium),
-                vertical = dimensionResource(R.dimen.padding_small)
-            )
-            .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable(onClick = onClick)
     ) {
-        UserCardContent(user)
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .onGloballyPositioned { coordinates ->
+                    itemSize = coordinates.size.toSize()
+                    itemPosition = coordinates.localToRoot(Offset.Zero)
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .onGloballyPositioned { coordinates ->
+                        if (state.selectedUserId == user.id) {
+                            state.avatarPosition = coordinates.localToRoot(Offset.Zero)
+                            state.avatarSize = coordinates.size.toSize()
+                        }
+                    }
+            ) {
+                UserAvatar(fullName = user.name, size = 40.dp)
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            UserInfo(user)
+        }
     }
 }
 
 @Composable
-private fun UserCardContent(user: User) {
-    Row(
-        modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        UserAvatar(user.name)
-        Spacer(modifier = Modifier.width(dimensionResource(R.dimen.padding_medium_small)))
-        UserInfo(user)
-    }
-}
-
-@Composable
-private fun UserAvatar(fullName: String) {
+private fun UserAvatar(fullName: String, size: Dp) {
     Box(
         modifier = Modifier
-            .size(40.dp)
+            .size(size)
             .background(
                 MaterialTheme.colorScheme.primaryContainer,
                 shape = CircleShape
@@ -59,8 +81,13 @@ private fun UserAvatar(fullName: String) {
     ) {
         Text(
             text = getInitials(fullName),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            style = MaterialTheme.typography.displaySmall,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = Modifier
+                .graphicsLayer {
+                    scaleX = size.value / 100f
+                    scaleY = size.value / 100f
+                }
         )
     }
 }

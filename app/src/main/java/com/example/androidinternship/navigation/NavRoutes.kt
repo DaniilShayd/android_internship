@@ -14,6 +14,8 @@ object NavRoutes {
     const val USERS = "users"
 
     // Nested routes (child screens without BottomTabBar)
+    const val SPLASH = "splash"
+    
     const val POSTS_MAIN = "posts_main"
     const val POST_DETAIL = "post_detail/{${POST_ID}}"
 

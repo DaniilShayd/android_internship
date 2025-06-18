@@ -10,6 +10,7 @@ import com.example.androidinternship.ui.screens.createtodo.CreateTodoScreen
 import com.example.androidinternship.ui.screens.photo.PhotoScreen
 import com.example.androidinternship.ui.screens.post.PostScreen
 import com.example.androidinternship.ui.screens.posts.PostsScreen
+import com.example.androidinternship.ui.screens.splash.SplashScreen
 import com.example.androidinternship.ui.screens.todos.TodosScreen
 import com.example.androidinternship.ui.screens.user.UserScreen
 import com.example.androidinternship.ui.screens.users.UsersScreen
@@ -18,9 +19,18 @@ import com.example.androidinternship.ui.screens.users.UsersScreen
 fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.POSTS,
+        startDestination = NavRoutes.SPLASH,
         modifier = modifier
     ) {
+        composable(NavRoutes.SPLASH) {
+            SplashScreen(onAnimationFinished = {
+                navController.navigate(NavRoutes.POSTS_MAIN) {
+                    popUpTo(NavRoutes.SPLASH) {
+                        inclusive = true
+                    }
+                }
+            })
+        }
         navigation(
             startDestination = NavRoutes.POSTS_MAIN,
             route = NavRoutes.POSTS
@@ -100,7 +110,8 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
             ) { backStackEntry ->
                 val userId = backStackEntry.arguments?.getInt(NavElements.USER_ID) ?: 0
                 UserScreen(
-                    userId = userId, navController = navController,
+                    userId = userId,
+                    navController = navController
                 )
             }
         }
