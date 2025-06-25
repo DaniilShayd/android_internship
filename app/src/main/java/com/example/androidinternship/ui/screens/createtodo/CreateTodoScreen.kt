@@ -8,11 +8,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.androidinternship.extentions.hideKeyboardOnTap
-import com.example.androidinternship.resources.StateNames.editedTodoIndexState
-import com.example.androidinternship.resources.StateNames.editedTodoState
-import com.example.androidinternship.resources.StateNames.editingTodoIndexState
-import com.example.androidinternship.resources.StateNames.editingTodoState
-import com.example.androidinternship.resources.StateNames.newTodoState
+import com.example.androidinternship.resources.StateNames.EDITED_TODO_INDEX_STATE
+import com.example.androidinternship.resources.StateNames.EDITED_TODO_STATE
+import com.example.androidinternship.resources.StateNames.EDITING_TODO_INDEX_STATE
+import com.example.androidinternship.resources.StateNames.EDITING_TODO_STATE
+import com.example.androidinternship.resources.StateNames.NEW_TODO_STATE
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.androidinternship.R
@@ -24,8 +24,8 @@ fun CreateTodoScreen(navController: NavHostController) {
 
     val savedStateHandle = navController.previousBackStackEntry?.savedStateHandle
 
-    val editingTodo = savedStateHandle?.get<String>(editingTodoState)
-    val editingIndex = savedStateHandle?.get<Int>(editingTodoIndexState)
+    val editingTodo = savedStateHandle?.get<String>(EDITING_TODO_STATE)
+    val editingIndex = savedStateHandle?.get<Int>(EDITING_TODO_INDEX_STATE)
 
     var todoText by remember {
         mutableStateOf(editingTodo ?: "")
@@ -61,11 +61,11 @@ fun CreateTodoScreen(navController: NavHostController) {
                 if (todoText.isNotBlank()) {
                     if (editingIndex != null) {
 
-                        savedStateHandle[editedTodoState] = todoText
-                        savedStateHandle[editedTodoIndexState] = editingIndex
+                        savedStateHandle[EDITED_TODO_STATE] = todoText
+                        savedStateHandle[EDITED_TODO_INDEX_STATE] = editingIndex
                     } else {
 
-                        savedStateHandle?.set(newTodoState, todoText)
+                        savedStateHandle?.set(NEW_TODO_STATE, todoText)
                     }
                     navController.popBackStack()
                 }

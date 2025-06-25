@@ -11,11 +11,11 @@ import androidx.compose.ui.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import com.example.androidinternship.navigation.NavRoutes
-import com.example.androidinternship.resources.StateNames.editedTodoIndexState
-import com.example.androidinternship.resources.StateNames.editedTodoState
-import com.example.androidinternship.resources.StateNames.editingTodoIndexState
-import com.example.androidinternship.resources.StateNames.editingTodoState
-import com.example.androidinternship.resources.StateNames.newTodoState
+import com.example.androidinternship.resources.StateNames.EDITED_TODO_INDEX_STATE
+import com.example.androidinternship.resources.StateNames.EDITED_TODO_STATE
+import com.example.androidinternship.resources.StateNames.EDITING_TODO_INDEX_STATE
+import com.example.androidinternship.resources.StateNames.EDITING_TODO_STATE
+import com.example.androidinternship.resources.StateNames.NEW_TODO_STATE
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.androidinternship.R
@@ -30,20 +30,20 @@ fun TodosScreen(
     var editingIndex by rememberSaveable { mutableStateOf(-1) }
 
     val newTodo by remember {
-        derivedStateOf { savedStateHandle.get<String>(newTodoState) }
+        derivedStateOf { savedStateHandle.get<String>(NEW_TODO_STATE) }
     }
 
     val editedTodo by remember {
         derivedStateOf {
-            savedStateHandle.get<String>(editedTodoState) to
-                    savedStateHandle.get<Int>(editedTodoIndexState)
+            savedStateHandle.get<String>(EDITED_TODO_STATE) to
+                    savedStateHandle.get<Int>(EDITED_TODO_INDEX_STATE)
         }
     }
 
     LaunchedEffect(newTodo) {
         newTodo?.let {
             todos = todos + it
-            savedStateHandle.remove<String>(newTodoState)
+            savedStateHandle.remove<String>(NEW_TODO_STATE)
         }
     }
 
@@ -54,8 +54,8 @@ fun TodosScreen(
                     todos = todos.toMutableList().apply {
                         set(idx, editedText)
                     }
-                    savedStateHandle.remove<String>(editedTodoState)
-                    savedStateHandle.remove<Int>(editedTodoIndexState)
+                    savedStateHandle.remove<String>(EDITED_TODO_STATE)
+                    savedStateHandle.remove<Int>(EDITED_TODO_INDEX_STATE)
                     editingIndex = -1
                 }
             }
@@ -85,8 +85,8 @@ fun TodosScreen(
                     },
                     onEdit = {
                         editingIndex = index
-                        savedStateHandle[editingTodoState] = todo
-                        savedStateHandle[editingTodoIndexState] = index
+                        savedStateHandle[EDITING_TODO_STATE] = todo
+                        savedStateHandle[EDITING_TODO_INDEX_STATE] = index
                         navController.navigate(NavRoutes.TODO_DETAIL)
                     }
                 )
