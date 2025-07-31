@@ -8,68 +8,72 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.androidinternship.extentions.hideKeyboardOnTap
-import com.example.androidinternship.resources.StateNames.EDITED_TODO_INDEX_STATE
-import com.example.androidinternship.resources.StateNames.EDITED_TODO_STATE
-import com.example.androidinternship.resources.StateNames.EDITING_TODO_INDEX_STATE
-import com.example.androidinternship.resources.StateNames.EDITING_TODO_STATE
-import com.example.androidinternship.resources.StateNames.NEW_TODO_STATE
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.androidinternship.R
 import com.example.androidinternship.ui.composables.UIButton
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateTodoScreen(navController: NavHostController) {
+fun CreateTodoScreen(
+    navController: NavHostController,
+    viewModel: CreateTodoViewModel = viewModel()
+) {
+    val todoText by remember { derivedStateOf { viewModel.todoText } }
 
-    val savedStateHandle = navController.previousBackStackEntry?.savedStateHandle
-
-    val editingTodo = savedStateHandle?.get<String>(EDITING_TODO_STATE)
-    val editingIndex = savedStateHandle?.get<Int>(EDITING_TODO_INDEX_STATE)
-
-    var todoText by remember {
-        mutableStateOf(editingTodo ?: "")
-    }
-
-    Scaffold(modifier = Modifier.hideKeyboardOnTap(), topBar = {
-        TopAppBar(title = {
-            Text(
-                if (editingIndex != null) stringResource(R.string.edit_todo) else stringResource(R.string.add_todo)
+    Scaffold(
+        modifier = Modifier.hideKeyboardOnTap(),
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        if (viewModel.isEditing)
+                            stringResource(R.string.edit_todo)
+                        else
+                            stringResource(R.string.add_todo)
+                    )
+                },
+                navigationIcon = {
+                    IconButton({ navController.popBackStack() }) {
+                        Icon(
+                            Icons.Default.ArrowBackIosNew,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                }
             )
-        }, navigationIcon = {
-            IconButton({ navController.popBackStack() }) {
-                Icon(Icons.Default.ArrowBackIosNew, contentDescription = stringResource(R.string.back) )
-            }
-        })
-    }) { padding ->
+        }
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(dimensionResource(R.dimen.padding_medium))
         ) {
-            OutlinedTextField(value = todoText,
-                onValueChange = { todoText = it },
-                label = { stringResource(R.string.add_todo) },
+            OutlinedTextField(
+                value = todoText,
+                onValueChange = viewModel::onTodoTextChanged,
+                label = { Text(stringResource(R.string.add_todo)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
 
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
 
-            UIButton(text = if (editingIndex != null) stringResource(R.string.save_changes) else stringResource(R.string.add_todo), onClick = {
-                if (todoText.isNotBlank()) {
-                    if (editingIndex != null) {
-
-                        savedStateHandle[EDITED_TODO_STATE] = todoText
-                        savedStateHandle[EDITED_TODO_INDEX_STATE] = editingIndex
-                    } else {
-
-                        savedStateHandle?.set(NEW_TODO_STATE, todoText)
+            UIButton(
+                text = if (viewModel.isEditing)
+                    stringResource(R.string.save_changes)
+                else
+                    stringResource(R.string.add_todo),
+                onClick = {
+                    viewModel.onSaveClick {
+                        navController.popBackStack()
                     }
-                    navController.popBackStack()
                 }
-            })
+            )
         }
     }
 }
+

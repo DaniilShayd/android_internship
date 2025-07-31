@@ -16,6 +16,13 @@ import com.example.androidinternship.ui.screens.todos.TodosScreen
 import com.example.androidinternship.ui.screens.user.UserScreen
 import com.example.androidinternship.ui.screens.users.UsersScreen
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.androidinternship.ui.screens.createtodo.CreateTodoViewModel
+import com.example.androidinternship.ui.screens.post.PostViewModel
+import com.example.androidinternship.ui.screens.todos.TodosViewModel
+import kotlin.Int
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -51,9 +58,15 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
                         type = NavType.IntType
                     })
                 ) { backStackEntry ->
+                    val viewModel: PostViewModel = viewModel(
+                        factory = PostViewModelFactory(
+                            backStackEntry.arguments?.getInt(NavElements.POST_ID) ?: 0
+                        )
+                    )
+
                     PostScreen(
-                        postId = backStackEntry.arguments?.getInt(NavElements.POST_ID) ?: 0,
-                        navController = navController
+                        navController = navController,
+                        viewModel = viewModel,
                     )
                 }
             }
@@ -81,22 +94,42 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
                 }
             }
 
+
             navigation(
                 startDestination = NavRoutes.TODOS_MAIN,
                 route = NavRoutes.TODOS
             ) {
-                composable(NavRoutes.TODOS_MAIN) { backStackEntry ->
+                composable(NavRoutes.TODOS_MAIN) {
+                    val viewModel: TodosViewModel = viewModel(
+                        factory = TodosViewModelFactory()
+                    )
+
                     TodosScreen(
                         navController = navController,
-                        savedStateHandle = backStackEntry.savedStateHandle
+                        viewModel = viewModel
                     )
                 }
-                composable(NavRoutes.TODO_DETAIL) {
-                    CreateTodoScreen(
-                        navController = navController,
+
+                composable(
+                    route = NavRoutes.TODO_DETAIL_WITH_INDEX,
+                    arguments = listOf(
+                        navArgument("index") {
+                            type = NavType.StringType
+                            nullable = true
+                            defaultValue = null
+                        }
                     )
+                ) { backStackEntry ->
+                    val index = backStackEntry.arguments?.getString("index")?.toIntOrNull()
+                    val viewModel: CreateTodoViewModel = viewModel(
+                        factory = CreateTodoViewModelFactory(index)
+                    )
+
+                    CreateTodoScreen(navController = navController, viewModel = viewModel)
                 }
+
             }
+
 
             navigation(
                 startDestination = NavRoutes.USERS_MAIN,
@@ -129,3 +162,31 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
     }
 
 }
+
+
+class TodosViewModelFactory(
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return TodosViewModel() as T
+    }
+}
+
+class PostViewModelFactory(
+    private val postId: Int
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return PostViewModel(postId = postId) as T
+    }
+}
+
+class CreateTodoViewModelFactory(
+    private val index: Int?
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return CreateTodoViewModel(index) as T
+    }
+}
+

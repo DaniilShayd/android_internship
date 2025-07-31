@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,26 +22,27 @@ import com.example.androidinternship.ui.components.PostCardBottomInfo
 import com.example.androidinternship.ui.components.cards.CommentCard
 
 
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 @Composable
 fun PostScreen(
-    postId: Int,
     navController: NavController,
+    viewModel: PostViewModel = viewModel(
+    )
 ) {
-    var post by remember {
-        mutableStateOf(posts.find { it.id == postId } ?: Post(
-            id = null,
-            description = "",
-            title = "",
-            isLiked = false,
-            userName = "",
-            comments = emptyList(),
-        ))
-    }
+
+    val post by viewModel.postState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             PostScreenTopBar(
-                navController = navController, post = post
+                navController = navController,
+                post = post,
+                onLikeClick = viewModel::toggleLike
             )
         }
     ) { padding ->
@@ -49,12 +52,13 @@ fun PostScreen(
                 .padding(padding)
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            if (post.id == null) {
+            if (post.id == -1) {
                 PostNotFound()
             } else {
-                PostContent(post = post, onLikeClick = {
-                    post = post.copy(isLiked = !post.isLiked)
-                })
+                PostContent(
+                    post = post,
+                    onLikeClick = viewModel::toggleLike
+                )
             }
         }
     }
@@ -62,18 +66,26 @@ fun PostScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PostScreenTopBar(navController: NavController, post: Post) {
+private fun PostScreenTopBar(
+    navController: NavController,
+    post: Post,
+    onLikeClick: () -> Unit
+) {
     TopAppBar(
-        title = {
-            post.title
-        },
+        title = { Text(post.title) },
         navigationIcon = {
-            IconButton(onClick = {
-                navController.popBackStack()
-            }) {
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBackIosNew,
-                    contentDescription = stringResource(R.string.back)
+                    Icons.Default.ArrowBackIosNew, stringResource(R.string.back)
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = onLikeClick) {
+                Icon(
+                    imageVector = if (post.isLiked) Icons.Filled.Favorite else Icons.Outlined.Favorite,
+                    contentDescription = stringResource(R.string.like),
+                    tint = if (post.isLiked) Color.Red else MaterialTheme.colorScheme.onSurface
                 )
             }
         }

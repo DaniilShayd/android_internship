@@ -24,7 +24,7 @@ object NavRoutes {
     const val PHOTO = "photo/{${PHOTO_ID}}"
 
     const val TODOS_MAIN = "todos_main"
-    const val TODO_DETAIL = "todo_detail"
+    const val TODO_DETAIL_WITH_INDEX = "todos/detail?index={index}"
 
     const val USERS_MAIN = "users_main"
     const val USER_DETAIL = "user_detail/{${USER_ID}}"

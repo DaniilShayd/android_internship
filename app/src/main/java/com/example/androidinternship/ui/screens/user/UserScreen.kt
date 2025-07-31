@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.androidinternship.R
 import com.example.androidinternship.data.User
-import com.example.androidinternship.data.UserSharedElementType
 import com.example.androidinternship.data.users
 import com.example.androidinternship.ui.components.NestedScreenAppBar
 import com.example.androidinternship.ui.components.cards.CommentCard

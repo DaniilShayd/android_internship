@@ -3,6 +3,7 @@ accompanistNavigationAnimation = "0.31.5-alpha"
 accompanistNavigationMaterial = "0.31.5-alpha"
 accompanistSharedElement = "0.31.5-alpha"
 accompanistSharedElementVersion = "0.34.1"
+activityComposeVersion = "1.9.0"
 agp = "8.10.1"
 appcompat = "1.7.1"
 kotlin = "2.0.0"
@@ -11,9 +12,11 @@ junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeCompose = "2.9.0"
+lifecycleRuntimeComposeVersion = "2.7.0"
 lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2024.04.01"
+lifecycleViewmodelKtx = "2.9.2"
 material = "1.12.0"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.9.0"
@@ -30,9 +33,13 @@ accompanist-shared-element = { module = "com.google.accompanist:accompanist-shar
 accompanist-navigation-material = { module = "com.google.accompanist:accompanist-navigation-material", version.ref = "accompanistNavigationMaterial" }
 accompanist-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanistNavigationAnimation" }
 accompanist-shared-element-v0341 = { module = "com.google.accompanist:accompanist-shared-element", version.ref = "accompanistSharedElementVersion" }
+androidx-activity-compose-v190 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
+androidx-lifecycle-runtime-compose-v270 = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeComposeVersion" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelKtx" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-navigation-compose-v270 = { module = "androidx.navigation:navigation-compose", version.ref = "navigationComposeVersion" }

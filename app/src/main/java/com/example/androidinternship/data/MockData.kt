@@ -2,7 +2,7 @@ package com.example.androidinternship.data
 
 import com.example.androidinternship.R
 
-val posts = listOf(
+val POSTS = listOf(
     Post(
         id = 1,
         title = "Мой первый пост",
