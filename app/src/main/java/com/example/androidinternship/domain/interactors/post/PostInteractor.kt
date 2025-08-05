@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class PostInteractor private constructor() {
-    private val _posts = MutableStateFlow<List<Post>>(POSTS)
+    private val _posts = MutableStateFlow(POSTS)
     val posts: StateFlow<List<Post>> = _posts.asStateFlow()
 
     fun likePost(postId: Int) {

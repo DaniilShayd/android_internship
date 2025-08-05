@@ -37,7 +37,7 @@ fun NestedScreenAppBar(
             Icon(
                 imageVector = Icons.Default.ArrowBackIosNew,
                 contentDescription = stringResource(R.string.back)
-                )
+            )
         }
     }
 }

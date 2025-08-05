@@ -20,8 +20,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidinternship.ui.screens.createtodo.CreateTodoViewModel
+import com.example.androidinternship.ui.screens.photo.PhotoViewModel
 import com.example.androidinternship.ui.screens.post.PostViewModel
-import com.example.androidinternship.ui.screens.todos.TodosViewModel
+import com.example.androidinternship.ui.screens.user.UserViewModel
 import kotlin.Int
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -80,16 +81,38 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
                         navController = navController,
                     )
                 }
-                composable(NavRoutes.ALBUM) {
+                composable(
+                    NavRoutes.ALBUM,
+                    arguments = listOf(navArgument(NavElements.ALBUM_ID) {
+                        type = NavType.IntType
+                    })
+                ) { backStackEntry ->
                     AlbumScreen(
                         navController = navController,
-                        albumId = it.arguments?.getString(NavElements.ALBUM_ID)?.toInt() ?: 0
+                        albumId = backStackEntry.arguments?.getInt(NavElements.ALBUM_ID) ?: 0
                     )
                 }
-                composable(NavRoutes.PHOTO) {
+                composable(
+                    NavRoutes.PHOTO,
+                    arguments = listOf(
+                        navArgument(NavElements.ALBUM_ID) {
+                            type = NavType.IntType
+                        },
+                        navArgument(NavElements.PHOTO_INDEX) {
+                            type = NavType.IntType
+                        },
+                    )
+                ) { backStackEntry ->
                     PhotoScreen(
                         navController = navController,
-                        photoId = it.arguments?.getString(NavElements.PHOTO_ID)?.toInt() ?: 0
+                        photoId = backStackEntry.arguments?.getInt(NavElements.PHOTO_INDEX)
+                            ?: 0,
+                        viewModel = viewModel(
+                            factory = PhotoViewModelFactory(
+                                albumId = backStackEntry.arguments?.getInt(NavElements.ALBUM_ID)
+                                    ?: 0,
+                            ),
+                        )
                     )
                 }
             }
@@ -100,13 +123,8 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
                 route = NavRoutes.TODOS
             ) {
                 composable(NavRoutes.TODOS_MAIN) {
-                    val viewModel: TodosViewModel = viewModel(
-                        factory = TodosViewModelFactory()
-                    )
-
                     TodosScreen(
                         navController = navController,
-                        viewModel = viewModel
                     )
                 }
 
@@ -136,10 +154,11 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
                 route = NavRoutes.USERS
             ) {
                 composable(NavRoutes.USERS_MAIN) {
-                    UsersScreen(navController = navController,
+                    UsersScreen(
+                        navController = navController,
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@composable,
-                        )
+                    )
                 }
                 composable(
                     route = NavRoutes.USER_DETAIL,
@@ -149,12 +168,17 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
                         }
                     )
                 ) { backStackEntry ->
-                    val userId = backStackEntry.arguments?.getInt(NavElements.USER_ID) ?: 0
+                    val viewModel: UserViewModel = viewModel(
+                        factory = UserViewModelFactory(
+                            backStackEntry.arguments?.getInt(NavElements.USER_ID) ?: 0
+                        )
+                    )
+
                     UserScreen(
-                        userId = userId,
                         navController = navController,
                         sharedTransitionScope = this@SharedTransitionLayout,
-                        animatedContentScope = this@composable
+                        animatedContentScope = this@composable,
+                        viewModel= viewModel,
                     )
                 }
             }
@@ -163,14 +187,15 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
 
 }
 
-
-class TodosViewModelFactory(
+class PhotoViewModelFactory(
+    private val albumId: Int,
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return TodosViewModel() as T
+        return PhotoViewModel(albumId = albumId) as T
     }
 }
+
 
 class PostViewModelFactory(
     private val postId: Int
@@ -178,6 +203,15 @@ class PostViewModelFactory(
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return PostViewModel(postId = postId) as T
+    }
+}
+
+class UserViewModelFactory(
+    private val userId: Int
+) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return UserViewModel(userId = userId) as T
     }
 }
 

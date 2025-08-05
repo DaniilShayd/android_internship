@@ -11,18 +11,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.androidinternship.R
-import com.example.androidinternship.data.albums
 import com.example.androidinternship.ui.components.cards.UIImage
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun AlbumScreen(navController: NavController, albumId: Int) {
+fun AlbumScreen(
+    navController: NavController,
+    albumId: Int,
+    viewModel: AlbumViewModel = viewModel()
+) {
     Scaffold(
         topBar = { AlbumScreenTopBar(navController) }
     ) { padding ->
         AlbumContent(
             modifier = Modifier.padding(padding),
             navController = navController,
-            albumId = albumId
+            albumId = albumId,
+            viewModel = viewModel,
         )
     }
 }
@@ -31,10 +36,11 @@ fun AlbumScreen(navController: NavController, albumId: Int) {
 private fun AlbumContent(
     modifier: Modifier = Modifier,
     navController: NavController,
-    albumId: Int
+    albumId: Int,
+    viewModel: AlbumViewModel,
 ) {
-    val albums = remember { albums }
-    val album = albums.find { it.id == albumId } ?: return
+    val album = viewModel.getAlbumById(albumId = albumId)
+
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(128.dp),
@@ -45,7 +51,7 @@ private fun AlbumContent(
                 photoRes = photoRes,
                 onClick = {
                     val photoIndex = album.photos.indexOf(photoRes)
-                    navController.navigate("photo/$photoIndex")
+                    navController.navigate("photo/$albumId/$photoIndex")
                 }
             )
         }

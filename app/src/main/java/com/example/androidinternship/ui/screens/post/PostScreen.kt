@@ -24,17 +24,14 @@ import com.example.androidinternship.ui.components.cards.CommentCard
 
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun PostScreen(
     navController: NavController,
-    viewModel: PostViewModel = viewModel(
-    )
+    viewModel: PostViewModel = viewModel()
 ) {
-
     val post by viewModel.postState.collectAsStateWithLifecycle()
 
     Scaffold(
@@ -55,9 +52,10 @@ fun PostScreen(
             if (post.id == -1) {
                 PostNotFound()
             } else {
-                PostContent(
+                PostList(
                     post = post,
-                    onLikeClick = viewModel::toggleLike
+                    onLikeClick = viewModel::toggleLike,
+                    viewModel = viewModel
                 )
             }
         }
@@ -108,12 +106,7 @@ private fun PostNotFound() {
 }
 
 @Composable
-private fun PostContent(post: Post, onLikeClick: () -> Unit) {
-    PostList(post = post, onLikeClick = onLikeClick)
-}
-
-@Composable
-private fun PostList(post: Post, onLikeClick: () -> Unit) {
+private fun PostList(post: Post, onLikeClick: () -> Unit, viewModel: PostViewModel) {
     LazyColumn(
         modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
     ) {
@@ -125,28 +118,40 @@ private fun PostList(post: Post, onLikeClick: () -> Unit) {
         }
         if (post.comments.size > COMMENTS_SHOW_LIMIT) {
             item {
-                ExpandableComments(comments = post.comments)
+                ExpandableComments(comments = post.comments, viewModel = viewModel)
             }
         }
     }
 }
 
 @Composable
-private fun ExpandableComments(comments: List<Comment>) {
-    var expanded by remember { mutableStateOf(false) }
+private fun ExpandableComments(comments: List<Comment>, viewModel: PostViewModel) {
+    val commentsIsOpen by viewModel.commentsIsOpen.collectAsStateWithLifecycle()
 
-    TextButton(
-        onClick = { expanded = !expanded },
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(
-            text = if (expanded) stringResource(R.string.hide_comments) else stringResource(R.string.show_comments)
-        )
+    if (!commentsIsOpen) {
+        TextButton(
+            onClick = viewModel::changeCommentVisibility,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(R.string.show_comments)
+            )
+        }
     }
 
-    if (expanded) {
+
+    if (commentsIsOpen) {
         comments.drop(COMMENTS_SHOW_LIMIT).forEach { comment ->
             CommentCard(comment = comment)
+        }
+
+        TextButton(
+            onClick = viewModel::changeCommentVisibility,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(R.string.hide_comments)
+            )
         }
     }
 }

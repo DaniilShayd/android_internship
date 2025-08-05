@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 class TodosViewModel(
 ) : ViewModel() {
 
-    val todoInteractor = TodoInteractor.getInstance()
+    private val todoInteractor = TodoInteractor.getInstance()
 
     val todos: StateFlow<List<String>> = todoInteractor.todos
 

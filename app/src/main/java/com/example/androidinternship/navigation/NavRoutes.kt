@@ -1,7 +1,7 @@
 package com.example.androidinternship.navigation
 
 import com.example.androidinternship.navigation.NavElements.ALBUM_ID
-import com.example.androidinternship.navigation.NavElements.PHOTO_ID
+import com.example.androidinternship.navigation.NavElements.PHOTO_INDEX
 import com.example.androidinternship.navigation.NavElements.POST_ID
 import com.example.androidinternship.navigation.NavElements.USER_ID
 
@@ -21,7 +21,7 @@ object NavRoutes {
 
     const val ALBUMS_MAIN = "albums_main"
     const val ALBUM = "album/{${ALBUM_ID}}"
-    const val PHOTO = "photo/{${PHOTO_ID}}"
+    const val PHOTO = "photo/{${ALBUM_ID}}/{${PHOTO_INDEX}}"
 
     const val TODOS_MAIN = "todos_main"
     const val TODO_DETAIL_WITH_INDEX = "todos/detail?index={index}"

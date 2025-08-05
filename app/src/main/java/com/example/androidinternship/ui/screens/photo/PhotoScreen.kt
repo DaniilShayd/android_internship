@@ -11,13 +11,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.androidinternship.R
 import net.engawapg.lib.zoomable.*
 
 @Composable
-fun PhotoScreen(photoId: Int, navController: NavController) {
-    val photos = rememberPhotoList()
+fun PhotoScreen(
+    photoId: Int,
+    navController: NavController,
+    viewModel: PhotoViewModel = viewModel()
+) {
+    val photos = viewModel.photos
 
     Scaffold(
         topBar = { PhotoScreenTopBar(navController) }
@@ -25,24 +30,9 @@ fun PhotoScreen(photoId: Int, navController: NavController) {
         PhotoContent(
             padding = padding,
             photos = photos,
-            initialPhotoId = photoId
+            initialPhotoIndex = photoId
         )
     }
-}
-
-@Composable
-private fun rememberPhotoList(): List<Int> = remember {
-    listOf(
-        R.drawable.photo1,
-        R.drawable.photo2,
-        R.drawable.photo3,
-        R.drawable.photo4,
-        R.drawable.photo5,
-        R.drawable.photo6,
-        R.drawable.photo7,
-        R.drawable.photo8,
-        R.drawable.photo9
-    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +59,7 @@ private fun PhotoScreenTopBar(navController: NavController) {
 private fun PhotoContent(
     padding: PaddingValues,
     photos: List<Int>,
-    initialPhotoId: Int
+    initialPhotoIndex: Int
 ) {
     Column(
         modifier = Modifier
@@ -77,7 +67,7 @@ private fun PhotoContent(
             .padding(padding)
     ) {
         val pagerState = rememberPagerState(
-            initialPage = initialPhotoId,
+            initialPage = initialPhotoIndex,
             pageCount = { photos.size }
         )
         val zoomState = rememberZoomState(maxScale = 5f)

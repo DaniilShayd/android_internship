@@ -1,4 +1,4 @@
- import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -7,20 +7,20 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import com.example.androidinternship.navigation.*
+import com.example.androidinternship.ui.screens.main.MainViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun MainScreen(navController: NavHostController = rememberNavController()) {
+fun MainScreen(
+    navController: NavHostController = rememberNavController(),
+    viewModel: MainViewModel = viewModel()
+) {
     val tabs = TabItem.getTabs()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val showBottomBar = remember(currentRoute) {
-        NavRoutes.rootRoutes.any { rootRoute ->
-            currentRoute?.startsWith(rootRoute) == true && currentRoute == rootRoute
-        }
-    }
-
-    val selectedTab = getTabIndex(currentRoute, tabs)
+    val showBottomBar = viewModel.shouldShowBottomBar(currentRoute)
+    val selectedTab = viewModel.getSelectedTab(currentRoute, tabs)
 
     Scaffold(
         bottomBar = {
@@ -28,7 +28,18 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                 BottomNavBar(
                     selectedTab = selectedTab,
                     tabs = tabs,
-                    navController = navController
+                    onTabSelected = { index ->
+                        if (selectedTab != index) {
+                            val tab = tabs[index]
+                            navController.navigate(tab.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    }
                 )
             }
         }
@@ -40,24 +51,19 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
     }
 }
 
+
+
 @Composable
 fun BottomNavBar(
     selectedTab: Int,
     tabs: List<TabItem>,
-    navController: NavHostController
+    onTabSelected: (Int) -> Unit
 ) {
     NavigationBar {
         tabs.forEachIndexed { index, tab ->
             NavigationBarItem(
                 selected = selectedTab == index,
-                onClick = {
-                    onTabIconClick(
-                        selectedTab = selectedTab,
-                        index = index,
-                        navController = navController,
-                        tab = tab,
-                    )
-                },
+                onClick = { onTabSelected(index) },
                 icon = {
                     Icon(
                         imageVector = tab.icon,
@@ -72,28 +78,5 @@ fun BottomNavBar(
                 }
             )
         }
-    }
-}
-
-private fun getTabIndex(route: String?, tabs: List<TabItem>): Int {
-    return tabs.indexOfFirst { tab ->
-        route?.startsWith(tab.route) == true
-    }.takeIf { it != -1 } ?: 0
-}
-
-private fun onTabIconClick(
-    selectedTab: Int,
-    index: Int,
-    navController: NavHostController,
-    tab: TabItem
-) {
-    if (selectedTab == index) return
-
-    navController.navigate(tab.route) {
-        popUpTo(navController.graph.findStartDestination().id) {
-            saveState = true
-        }
-        launchSingleTop = true
-        restoreState = true
     }
 }

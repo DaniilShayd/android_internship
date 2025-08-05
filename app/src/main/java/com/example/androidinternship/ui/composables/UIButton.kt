@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun UIButton (text: String, onClick: () -> Unit) {
+fun UIButton(text: String, onClick: () -> Unit) {
     Button(
         colors = ButtonColors(
             containerColor = MaterialTheme.colorScheme.onPrimaryContainer,

@@ -5,12 +5,6 @@ package com.example.androidinternship.ui.screens.user
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.*
@@ -23,10 +17,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.androidinternship.R
 import com.example.androidinternship.data.User
-import com.example.androidinternship.data.users
 import com.example.androidinternship.ui.components.NestedScreenAppBar
 import com.example.androidinternship.ui.components.cards.CommentCard
 import com.example.androidinternship.ui.composables.UIButton
@@ -34,26 +28,26 @@ import com.example.androidinternship.ui.composables.UIButton
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun UserScreen(
-    userId: Int,
     navController: NavHostController,
     sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope
+    animatedContentScope: AnimatedContentScope,
+    viewModel: UserViewModel = viewModel()
 ) {
-    val user = users.find { it.id == userId }
+    val user = viewModel.user
 
     Column {
         NestedScreenAppBar(
             color = MaterialTheme.colorScheme.surfaceVariant,
-            onBackClick = {
-                navController.popBackStack()
-            }
+            onBackClick = { navController.popBackStack() }
         )
 
         if (user != null) {
             UserContent(
                 user = user,
                 sharedTransitionScope = sharedTransitionScope,
-                animatedContentScope = animatedContentScope
+                animatedContentScope = animatedContentScope,
+                commentsOpened = viewModel.commentsOpened,
+                onToggleComments = viewModel::toggleComments
             )
         } else {
             UserNotFound()
@@ -61,11 +55,14 @@ fun UserScreen(
     }
 }
 
+
 @Composable
 private fun UserContent(
     user: User,
     sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope
+    animatedContentScope: AnimatedContentScope,
+    commentsOpened: Boolean,
+    onToggleComments: () -> Unit
 ) {
     with(sharedTransitionScope) {
         Column(
@@ -87,10 +84,15 @@ private fun UserContent(
                 animatedContentScope = animatedContentScope
             )
 
-            UserCommentSection(user)
+            UserCommentSection(
+                user = user,
+                commentsOpened = commentsOpened,
+                onToggleComments = onToggleComments
+            )
         }
     }
 }
+
 
 @Composable
 private fun UserHeaderBackground(
@@ -166,10 +168,12 @@ private fun SharedTransitionScope.UserNameDisplay(
 }
 
 @Composable
-private fun UserCommentSection(user: User) {
-    var commentsIsOpened by remember {
-        mutableStateOf(false)
-    }
+private fun UserCommentSection(
+    user: User,
+    commentsOpened: Boolean,
+    onToggleComments: () -> Unit
+) {
+    val comments = user.comments
 
     Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium_large)))
@@ -180,9 +184,7 @@ private fun UserCommentSection(user: User) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        val comments = user.comments
-
-        if (!commentsIsOpened) {
+        if (!commentsOpened) {
             comments.take(2).forEach { comment ->
                 CommentCard(comment = comment)
             }
@@ -191,7 +193,7 @@ private fun UserCommentSection(user: User) {
 
             UIButton(
                 text = stringResource(R.string.show_comments),
-                onClick = { commentsIsOpened = true }
+                onClick = onToggleComments
             )
         } else {
             comments.forEach { comment ->
@@ -202,11 +204,12 @@ private fun UserCommentSection(user: User) {
 
             UIButton(
                 text = stringResource(R.string.hide_comments),
-                onClick = { commentsIsOpened = false }
+                onClick = onToggleComments
             )
         }
     }
 }
+
 
 @Composable
 private fun UserNotFound() {

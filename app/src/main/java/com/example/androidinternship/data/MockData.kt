@@ -102,7 +102,7 @@ val POSTS = listOf(
     )
 )
 
-val users = listOf(
+val USERS = listOf(
     User(
         id = 1,
         nickname = "@john_doe",
@@ -144,7 +144,7 @@ val users = listOf(
     )
 )
 
-val albums = listOf(
+val ALBUMS = listOf(
     Album(
         1, "Природа", listOf(
             R.drawable.photo1, R.drawable.photo2, R.drawable.photo3

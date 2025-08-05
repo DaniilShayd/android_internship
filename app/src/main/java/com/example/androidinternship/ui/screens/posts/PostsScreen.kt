@@ -9,7 +9,6 @@ import androidx.compose.ui.*
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.androidinternship.data.*
 import com.example.androidinternship.ui.components.cards.PostCard
 
 

@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.androidinternship.data.users
 import com.example.androidinternship.ui.components.cards.UserListCard
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -18,9 +20,10 @@ import com.example.androidinternship.ui.components.cards.UserListCard
 fun UsersScreen(
     navController: NavController,
     sharedTransitionScope: SharedTransitionScope,
-    animatedContentScope: AnimatedContentScope
+    animatedContentScope: AnimatedContentScope,
+    viewModel: UsersViewModel = viewModel()
 ) {
-    val users = users
+    val users by viewModel.users.collectAsStateWithLifecycle()
 
     LazyColumn(
         modifier = Modifier

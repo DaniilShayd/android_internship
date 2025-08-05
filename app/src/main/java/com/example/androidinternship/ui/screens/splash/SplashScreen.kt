@@ -11,25 +11,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.androidinternship.R
-import kotlinx.coroutines.delay
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @SuppressLint("UseOfNonLambdaOffsetOverload")
 @Composable
 fun SplashScreen(
+    viewModel: SplashViewModel = viewModel(),
     onAnimationFinished: () -> Unit
 ) {
     val offsetX = remember { Animatable(0f) }
     val offsetY = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
-        delay(250)
+        viewModel.playAnimation(offsetX, offsetY)
+    }
 
-        animateAndReturn(offsetY, -100f)
-        animateAndReturn(offsetY, 100f)
-        animateAndReturn(offsetX, -100f)
-        animateAndReturn(offsetX, 100f)
-
-        onAnimationFinished()
+    LaunchedEffect(viewModel) {
+        viewModel.animationFinished.collect {
+            onAnimationFinished()
+        }
     }
 
     Box(
@@ -41,18 +41,12 @@ fun SplashScreen(
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo",
-            modifier = Modifier.offset(
-                x = offsetX.value.dp,
-                y = offsetY.value.dp
-            ).padding(64.dp)
+            modifier = Modifier
+                .offset(
+                    x = offsetX.value.dp,
+                    y = offsetY.value.dp
+                )
+                .padding(64.dp)
         )
     }
-}
-
-private suspend fun animateAndReturn(
-    animatable: Animatable<Float, *>,
-    targetValue: Float
-) {
-    animatable.animateTo(targetValue, animationSpec = tween(250))
-    animatable.animateTo(0f, animationSpec = tween(250))
 }
