@@ -1,43 +1,38 @@
 package com.example.androidinternship.ui.screens.createtodo
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.androidinternship.domain.interactors.todo.TodoInteractor
-import com.example.androidinternship.resources.StateNames.EDITED_TODO_INDEX_STATE
-import com.example.androidinternship.resources.StateNames.EDITED_TODO_STATE
-import com.example.androidinternship.resources.StateNames.EDITING_TODO_INDEX_STATE
-import com.example.androidinternship.resources.StateNames.EDITING_TODO_STATE
-import com.example.androidinternship.resources.StateNames.NEW_TODO_STATE
+import com.example.androidinternship.ui.screens.todos.TodosViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class CreateTodoViewModel(
-    private val editingIndex: Int?
+    private val editingIndex: Int?,
+    private val todosViewModel: TodosViewModel,
 ) : ViewModel() {
 
-    val todoInteractor = TodoInteractor.getInstance()
-
-    var todoText by mutableStateOf("")
-        private set
+    private var _todoText = MutableStateFlow("")
+    val todoText : StateFlow<String> =_todoText.asStateFlow()
 
     val isEditing: Boolean = editingIndex != null
 
     init {
-        todoText = editingIndex?.let { todoInteractor.todos.value.getOrNull(it) } ?: ""
+        _todoText.value = editingIndex?.let {
+            todosViewModel.todos.value.getOrNull(it)
+        } ?: ""
     }
 
     fun onTodoTextChanged(newValue: String) {
-        todoText = newValue
+        _todoText.value = newValue
     }
 
     fun onSaveClick(onDone: () -> Unit) {
-        if (todoText.isBlank()) return
+        if (_todoText.value.isBlank()) return
 
         if (isEditing && editingIndex != null) {
-            todoInteractor.updateTodo(editingIndex, todoText)
+            todosViewModel.updateTodo(editingIndex, _todoText.value)
         } else {
-            todoInteractor.addTodo(todoText)
+            todosViewModel.addTodo(_todoText.value)
         }
 
         onDone()

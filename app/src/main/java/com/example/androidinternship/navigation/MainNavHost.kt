@@ -22,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidinternship.ui.screens.createtodo.CreateTodoViewModel
 import com.example.androidinternship.ui.screens.photo.PhotoViewModel
 import com.example.androidinternship.ui.screens.post.PostViewModel
+import com.example.androidinternship.ui.screens.todos.TodosViewModel
 import com.example.androidinternship.ui.screens.user.UserViewModel
 import kotlin.Int
 
@@ -122,9 +123,12 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
                 startDestination = NavRoutes.TODOS_MAIN,
                 route = NavRoutes.TODOS
             ) {
+                val todosViewModel = TodosViewModel()
+
                 composable(NavRoutes.TODOS_MAIN) {
                     TodosScreen(
                         navController = navController,
+                        viewModel = todosViewModel,
                     )
                 }
 
@@ -139,11 +143,11 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
                     )
                 ) { backStackEntry ->
                     val index = backStackEntry.arguments?.getString("index")?.toIntOrNull()
-                    val viewModel: CreateTodoViewModel = viewModel(
-                        factory = CreateTodoViewModelFactory(index)
+                    CreateTodoScreen(
+                        navController = navController,
+                        todosViewModel = todosViewModel,
+                        index = index,
                     )
-
-                    CreateTodoScreen(navController = navController, viewModel = viewModel)
                 }
 
             }
@@ -178,7 +182,7 @@ fun MainNavHost(navController: NavHostController, modifier: Modifier = Modifier)
                         navController = navController,
                         sharedTransitionScope = this@SharedTransitionLayout,
                         animatedContentScope = this@composable,
-                        viewModel= viewModel,
+                        viewModel = viewModel,
                     )
                 }
             }
@@ -215,12 +219,12 @@ class UserViewModelFactory(
     }
 }
 
-class CreateTodoViewModelFactory(
-    private val index: Int?
-) : ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return CreateTodoViewModel(index) as T
-    }
-}
+//class CreateTodoViewModelFactory(
+//    private val index: Int?
+//) : ViewModelProvider.Factory {
+//    @Suppress("UNCHECKED_CAST")
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        return CreateTodoViewModel(index) as T
+//    }
+//}
 

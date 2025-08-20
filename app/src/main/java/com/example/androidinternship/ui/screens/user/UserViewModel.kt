@@ -5,27 +5,31 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.androidinternship.data.User
-import com.example.androidinternship.domain.interactors.users.UsersInterator
+import com.example.androidinternship.domain.repositories.UsersRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-class UserViewModel(userId: Int) : ViewModel() {
-    private val usersInteractor = UsersInterator.getInstance()
-    private val _user = usersInteractor.getUserById(userId)
-    val user: User? = _user
+class UserViewModel(
+    private val userId: Int,
+    private val repository: UsersRepository = UsersRepository()
+) : ViewModel() {
+
+    private val _user = MutableStateFlow<User?>(null)
+    val user: StateFlow<User?> = _user.asStateFlow()
 
     var commentsOpened by mutableStateOf(false)
         private set
 
+    init {
+        loadUser()
+    }
 
+    private fun loadUser() {
+        _user.value = repository.getUsers().find { it.id == userId }
+    }
 
     fun toggleComments() {
         commentsOpened = !commentsOpened
-    }
-
-    fun showAllComments() {
-        commentsOpened = true
-    }
-
-    fun hideAllComments() {
-        commentsOpened = false
     }
 }

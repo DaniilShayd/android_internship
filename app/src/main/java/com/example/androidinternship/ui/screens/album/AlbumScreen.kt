@@ -1,5 +1,6 @@
 package com.example.androidinternship.ui.screens.album
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.icons.Icons
@@ -9,16 +10,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.androidinternship.R
 import com.example.androidinternship.ui.components.cards.UIImage
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun AlbumScreen(
     navController: NavController,
     albumId: Int,
-    viewModel: AlbumViewModel = viewModel()
+    viewModel: AlbumViewModel = AlbumViewModel(albumId= albumId)
 ) {
     Scaffold(
         topBar = { AlbumScreenTopBar(navController) }
@@ -32,6 +33,7 @@ fun AlbumScreen(
     }
 }
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 private fun AlbumContent(
     modifier: Modifier = Modifier,
@@ -39,18 +41,21 @@ private fun AlbumContent(
     albumId: Int,
     viewModel: AlbumViewModel,
 ) {
-    val album = viewModel.getAlbumById(albumId = albumId)
+    val album by viewModel.album.collectAsStateWithLifecycle()
 
+    if (album == null) {
+        return;
+    }
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(128.dp),
         modifier = modifier.fillMaxSize()
     ) {
-        items(album.photos) { photoRes ->
+        items(album!!.photos ) { photoRes ->
             UIImage(
                 photoRes = photoRes,
                 onClick = {
-                    val photoIndex = album.photos.indexOf(photoRes)
+                    val photoIndex = album!!.photos.indexOf(photoRes)
                     navController.navigate("photo/$albumId/$photoIndex")
                 }
             )

@@ -2,6 +2,7 @@
 
 package com.example.androidinternship.ui.screens.user
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -25,6 +26,7 @@ import com.example.androidinternship.ui.components.NestedScreenAppBar
 import com.example.androidinternship.ui.components.cards.CommentCard
 import com.example.androidinternship.ui.composables.UIButton
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun UserScreen(
@@ -41,9 +43,9 @@ fun UserScreen(
             onBackClick = { navController.popBackStack() }
         )
 
-        if (user != null) {
+        if (user.value != null) {
             UserContent(
-                user = user,
+                user = user.value!!,
                 sharedTransitionScope = sharedTransitionScope,
                 animatedContentScope = animatedContentScope,
                 commentsOpened = viewModel.commentsOpened,

@@ -1,5 +1,6 @@
 package com.example.androidinternship.ui.screens.createtodo
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -12,16 +13,22 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.androidinternship.R
 import com.example.androidinternship.ui.composables.UIButton
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.androidinternship.ui.screens.todos.TodosViewModel
 
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateTodoScreen(
     navController: NavHostController,
-    viewModel: CreateTodoViewModel = viewModel()
+    todosViewModel: TodosViewModel,
+    index: Int?,
+    viewModel: CreateTodoViewModel = CreateTodoViewModel(
+        todosViewModel = todosViewModel,
+        editingIndex = index
+    ),
 ) {
-    val todoText by remember { derivedStateOf { viewModel.todoText } }
+    val todoText by viewModel.todoText.collectAsState()
 
     Scaffold(
         modifier = Modifier.hideKeyboardOnTap(),

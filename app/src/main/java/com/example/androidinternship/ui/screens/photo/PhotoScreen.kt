@@ -1,5 +1,6 @@
 package com.example.androidinternship.ui.screens.photo
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.*
@@ -16,6 +17,7 @@ import androidx.navigation.NavController
 import com.example.androidinternship.R
 import net.engawapg.lib.zoomable.*
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PhotoScreen(
     photoId: Int,
@@ -29,7 +31,7 @@ fun PhotoScreen(
     ) { padding ->
         PhotoContent(
             padding = padding,
-            photos = photos,
+            photos = photos.value,
             initialPhotoIndex = photoId
         )
     }
