@@ -3,41 +3,61 @@ package com.example.androidinternship.ui.screens.post
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidinternship.data.Post
+import com.example.androidinternship.domain.repositories.CommentsRepository
 import com.example.androidinternship.domain.repositories.PostRepository
-import kotlinx.coroutines.flow.*
+import com.example.androidinternship.utils.ErrorData
+import com.example.androidinternship.utils.StatefulData
+import com.example.androidinternship.utils.SuccessData
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class PostViewModel(
     private val postId: Int,
-    private val repository: PostRepository = PostRepository()
+    private val repository: PostRepository = PostRepository(),
+    private val commentsRepository: CommentsRepository = CommentsRepository()
 ) : ViewModel() {
 
-    private val _posts = MutableStateFlow(repository.getPosts())
-    private val _commentsIsOpen = MutableStateFlow(false)
+    private val _post = MutableStateFlow<StatefulData<Post>?>(null)
+    val postState: StateFlow<StatefulData<Post>?> = _post
 
+    private val _commentsIsOpen = MutableStateFlow(false)
     val commentsIsOpen: StateFlow<Boolean> = _commentsIsOpen.asStateFlow()
 
-    val postState: StateFlow<Post> = _posts
-        .map { posts -> posts.find { it.id == postId } ?: Post.notFound() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = Post.notFound()
-        )
+    init {
+        refreshPost()
+    }
 
     fun changeCommentVisibility() {
         _commentsIsOpen.value = !_commentsIsOpen.value
     }
 
     fun toggleLike() {
-        val updatedPosts = _posts.value.toMutableList()
-        val index = updatedPosts.indexOfFirst { it.id == postId }
-        if (index != -1) {
-            updatedPosts[index] = updatedPosts[index].copy(isLiked = !updatedPosts[index].isLiked)
-            _posts.value = updatedPosts
-        }
+        _post.value = SuccessData(
+            (_post.value?.unwrap() ?: Post()).copy(
+                isLiked = !(_post.value?.unwrap()?.isLiked ?: false)
+            )
+        )
     }
 
-    fun refreshPost() {
-        _posts.value = repository.getPosts()
+    private fun refreshPost() {
+        viewModelScope.launch {
+            try {
+
+                val postFromApi = repository.getPost(postId)
+
+
+                val commentsFromApi = commentsRepository.getComments(postId)
+
+
+                _post.value = SuccessData(
+                    postFromApi.copy(comments = commentsFromApi)
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _post.value = ErrorData(e)
+            }
+        }
     }
 }

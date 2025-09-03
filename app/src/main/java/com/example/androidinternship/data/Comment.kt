@@ -1,6 +1,12 @@
 package com.example.androidinternship.data
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Comment(
-    val userName: String,
-    val text: String
+    val id: Int? = null,
+    val postId: Int? = null,
+    val name: String? = null,
+    val email: String? = null,
+    val body: String? = null,
 )

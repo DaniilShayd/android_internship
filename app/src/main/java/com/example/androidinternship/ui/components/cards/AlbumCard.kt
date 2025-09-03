@@ -26,8 +26,7 @@ fun AlbumCard (album: Album, navController: NavController) {
         Column(
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
         ) {
-            Text(album.title)
-            Text("${stringResource(R.string.photos)} ${album.photos.size}")
+            Text(album.title ?: "")
         }
     }
 }

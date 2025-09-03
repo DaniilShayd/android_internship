@@ -1,16 +1,23 @@
 package com.example.androidinternship.domain.repositories
 
-import com.example.androidinternship.data.ALBUMS
+import com.example.androidinternship.ApiClient
 import com.example.androidinternship.data.Album
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.example.androidinternship.data.Photo
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 
 class AlbumsRepository {
-    fun getAlbums (): List<Album> {
-        return ALBUMS;
+    private val client = ApiClient.client
+
+    suspend fun getAlbums(): List<Album> {
+        return client.get("https://jsonplaceholder.typicode.com/albums").body()
     }
 
-   fun loadAlbum(albumId : Int) : Album? {
-        return ALBUMS.firstOrNull { it.id == albumId }
+    suspend fun getAlbum(albumId: Int): Album {
+        return client.get("https://jsonplaceholder.typicode.com/albums/$albumId").body()
+    }
+
+    suspend fun getAlbumPhotos(albumId: Int): List<Photo> {
+        return client.get("https://jsonplaceholder.typicode.com/albums/$albumId/photos").body()
     }
 }

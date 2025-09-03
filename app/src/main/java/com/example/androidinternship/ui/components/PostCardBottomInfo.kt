@@ -20,7 +20,7 @@ fun PostCardBottomInfo(post: Post, onLikeClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = post.userName,
+            text = post.userName ?: "",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
         )
@@ -30,9 +30,9 @@ fun PostCardBottomInfo(post: Post, onLikeClick: () -> Unit) {
             modifier = Modifier.size(dimensionResource(R.dimen.icon_size_medium))
         ) {
             Icon(
-                imageVector = if (post.isLiked) Icons.Filled.Favorite else Icons.Outlined.Favorite,
+                imageVector = if (post.isLiked == true) Icons.Filled.Favorite else Icons.Outlined.Favorite,
                 contentDescription = stringResource(R.string.like),
-                tint = if (post.isLiked) Color.Red else MaterialTheme.colorScheme.onSurface.copy(
+                tint = if (post.isLiked == true) Color.Red else MaterialTheme.colorScheme.onSurface.copy(
                     alpha = 0.6f
                 )
             )

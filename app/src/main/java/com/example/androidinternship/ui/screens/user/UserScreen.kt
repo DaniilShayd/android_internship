@@ -8,11 +8,8 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.*
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -25,6 +22,14 @@ import com.example.androidinternship.data.User
 import com.example.androidinternship.ui.components.NestedScreenAppBar
 import com.example.androidinternship.ui.components.cards.CommentCard
 import com.example.androidinternship.ui.composables.UIButton
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -35,28 +40,68 @@ fun UserScreen(
     animatedContentScope: AnimatedContentScope,
     viewModel: UserViewModel = viewModel()
 ) {
-    val user = viewModel.user
+    val userState by viewModel.user.collectAsStateWithLifecycle()
+    val commentsOpened by viewModel.commentsOpened.collectAsStateWithLifecycle()
 
-    Column {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         NestedScreenAppBar(
             color = MaterialTheme.colorScheme.surfaceVariant,
             onBackClick = { navController.popBackStack() }
         )
 
-        if (user.value != null) {
-            UserContent(
-                user = user.value!!,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedContentScope = animatedContentScope,
-                commentsOpened = viewModel.commentsOpened,
-                onToggleComments = viewModel::toggleComments
-            )
-        } else {
-            UserNotFound()
+        when {
+            userState?.isLoading() == true || userState == null -> {
+                LoadingIndicator()
+            }
+            userState?.isError() == true -> {
+                ErrorMessage()
+            }
+            else -> {
+                val user = userState?.unwrap()
+                if (user != null) {
+                    UserContent(
+                        user = user,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedContentScope = animatedContentScope,
+                        commentsOpened = commentsOpened,
+                        onToggleComments = viewModel::toggleComments
+                    )
+                } else {
+                    UserNotFound()
+                }
+            }
         }
     }
 }
 
+@Composable
+private fun LoadingIndicator() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.width(dimensionResource(R.dimen.icon_size_medium)),
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun ErrorMessage() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Не удалось загрузить данные пользователя",
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
 
 @Composable
 private fun UserContent(
@@ -133,7 +178,7 @@ private fun SharedTransitionScope.UserAvatar(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            UserAvatarText(user.name)
+            UserAvatarText(user.name ?: "")
         }
     }
 }
@@ -157,7 +202,7 @@ private fun SharedTransitionScope.UserNameDisplay(
     animatedContentScope: AnimatedContentScope
 ) {
     Text(
-        text = user.name,
+        text = user.name ?: "",
         style = MaterialTheme.typography.headlineSmall,
         textAlign = TextAlign.Center,
         modifier = Modifier
@@ -186,7 +231,13 @@ private fun UserCommentSection(
             modifier = Modifier.fillMaxWidth()
         )
 
-        if (!commentsOpened) {
+        if (comments.isEmpty()) {
+            Text(
+                text = "Нет комментариев",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        } else if (!commentsOpened) {
             comments.take(2).forEach { comment ->
                 CommentCard(comment = comment)
             }

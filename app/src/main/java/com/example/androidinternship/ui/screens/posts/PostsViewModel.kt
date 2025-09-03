@@ -6,24 +6,42 @@ import com.example.androidinternship.domain.repositories.PostRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import androidx.lifecycle.viewModelScope
+import com.example.androidinternship.utils.ErrorData
+import com.example.androidinternship.utils.StatefulData
+import com.example.androidinternship.utils.SuccessData
+import kotlinx.coroutines.launch
 
 class PostsViewModel(
     private val repository: PostRepository = PostRepository()
 ) : ViewModel() {
 
-    private val _posts = MutableStateFlow(repository.getPosts())
-    val posts: StateFlow<List<Post>> = _posts.asStateFlow()
+    private val _posts = MutableStateFlow<StatefulData<List<Post>>?>(null)
+    val posts: StateFlow<StatefulData<List<Post>>?> = _posts.asStateFlow()
+
+    init {
+        refreshPosts()
+    }
 
     fun toggleLike(postId: Int) {
-        val updatedPosts = _posts.value.toMutableList()
+        val updatedPosts = (_posts.value?.unwrap() ?: emptyList()).toMutableList()
         val index = updatedPosts.indexOfFirst { it.id == postId }
         if (index != -1) {
-            updatedPosts[index] = updatedPosts[index].copy(isLiked = !updatedPosts[index].isLiked)
-            _posts.value = updatedPosts
+            updatedPosts[index] = updatedPosts[index].copy(
+                isLiked = !(updatedPosts[index].isLiked ?: false)
+            )
+            _posts.value = SuccessData(updatedPosts)
         }
     }
 
-    fun refreshPosts() {
-        _posts.value = repository.getPosts()
+    private fun refreshPosts() {
+        viewModelScope.launch {
+            try {
+                val postsFromApi = repository.getPosts()
+                _posts.value = SuccessData(postsFromApi)
+            } catch (e: Exception) {
+                _posts.value = ErrorData(e)
+            }
+        }
     }
 }

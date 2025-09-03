@@ -1,15 +1,18 @@
 package com.example.androidinternship.domain.repositories
 
-import com.example.androidinternship.data.POSTS
-import com.example.androidinternship.data.Post
-import com.example.androidinternship.data.USERS
 import com.example.androidinternship.data.User
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import com.example.androidinternship.ApiClient
+import io.ktor.client.call.*
+import io.ktor.client.request.*
 
 class UsersRepository {
-    fun getUsers (): List<User> {
-        return USERS;
+    private val client = ApiClient.client
+
+    suspend fun getUsers(): List<User> {
+        return client.get("https://jsonplaceholder.typicode.com/users").body()
+    }
+
+    suspend fun getUser(userId: Int): User {
+        return client.get("https://jsonplaceholder.typicode.com/users/$userId").body()
     }
 }
-

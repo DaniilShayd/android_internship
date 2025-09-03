@@ -50,18 +50,18 @@ fun UserListCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 UserAvatar(
-                    fullName = user.name,
+                    fullName = user.name ?: "",
                     size = 40.dp,
                     sharedTransitionScope = sharedTransitionScope,
                     animatedContentScope = animatedContentScope,
-                    userId = user.id
+                    userId = user.id ?: -1
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
 
                 Column {
                     Text(
-                        text = user.name,
+                        text = user.name ?: "",
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.sharedElement(
                             sharedContentState = rememberSharedContentState(key = "user_name_${user.id}"),
@@ -69,10 +69,13 @@ fun UserListCard(
                         )
                     )
 
-                    UserNickname(user.nickname)
+                    UserNickname(user.name ?: "")
                     Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_smallest)))
-                    UserAddress(user.address)
-                    UserPhone(user.phoneNumber)
+                    UserAddress(
+                        (user.address?.city ?: "") + " " + (user.address?.street
+                            ?: "") + " " + (user.address?.suite ?: "")
+                    )
+                    UserPhone(user.phone ?: "")
                 }
             }
         }
@@ -114,25 +117,6 @@ private fun UserAvatar(
             )
         }
     }
-}
-
-@Composable
-private fun UserInfo(user: User) {
-    Column {
-        UserName(user.name)
-        UserNickname(user.nickname)
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_smallest)))
-        UserAddress(user.address)
-        UserPhone(user.phoneNumber)
-    }
-}
-
-@Composable
-private fun UserName(name: String) {
-    Text(
-        text = name,
-        style = MaterialTheme.typography.bodyLarge
-    )
 }
 
 @Composable

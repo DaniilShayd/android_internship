@@ -18,7 +18,7 @@ class CreateTodoViewModel(
 
     init {
         _todoText.value = editingIndex?.let {
-            todosViewModel.todos.value.getOrNull(it)
+            todosViewModel.todos.value?.unwrap()?.getOrNull(it)
         } ?: ""
     }
 

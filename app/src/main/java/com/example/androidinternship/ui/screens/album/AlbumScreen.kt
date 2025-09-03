@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,7 +20,7 @@ import com.example.androidinternship.ui.components.cards.UIImage
 fun AlbumScreen(
     navController: NavController,
     albumId: Int,
-    viewModel: AlbumViewModel = AlbumViewModel(albumId= albumId)
+    viewModel: AlbumViewModel = AlbumViewModel(albumId = albumId)
 ) {
     Scaffold(
         topBar = { AlbumScreenTopBar(navController) }
@@ -41,27 +42,29 @@ private fun AlbumContent(
     albumId: Int,
     viewModel: AlbumViewModel,
 ) {
-    val album by viewModel.album.collectAsStateWithLifecycle()
+    val photos by viewModel.photos.collectAsStateWithLifecycle()
 
-    if (album == null) {
-        return;
+    if (photos.isEmpty()) {
+        CircularProgressIndicator(modifier = Modifier.width(dimensionResource(R.dimen.icon_size_medium)))
+        return
     }
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(128.dp),
         modifier = modifier.fillMaxSize()
     ) {
-        items(album!!.photos ) { photoRes ->
+        items(photos) { photo ->
             UIImage(
-                photoRes = photoRes,
+                photoUrl = photo.url ?: "",
                 onClick = {
-                    val photoIndex = album!!.photos.indexOf(photoRes)
+                    val photoIndex = photos.indexOf(photo)
                     navController.navigate("photo/$albumId/$photoIndex")
                 }
             )
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

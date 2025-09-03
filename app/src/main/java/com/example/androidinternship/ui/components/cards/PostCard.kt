@@ -28,14 +28,14 @@ fun PostCard(post: Post, onLikeClick: () -> Unit, navController: NavHostControll
                 }
         ) {
             Text(
-                text = post.title,
+                text = post.title ?: "",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
             Spacer(
                 modifier = Modifier.height(dimensionResource(R.dimen.spacer_height_small))
             )
-            Text(text = post.description, style = MaterialTheme.typography.bodyMedium)
+            Text(text = post.body ?: "", style = MaterialTheme.typography.bodyMedium)
             Spacer(
                 modifier = Modifier.height(dimensionResource(R.dimen.spacer_height_medium))
             )

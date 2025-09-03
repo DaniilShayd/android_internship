@@ -34,11 +34,25 @@ fun PostScreen(
 ) {
     val post by viewModel.postState.collectAsStateWithLifecycle()
 
+    if (post?.isLoading() == true || post == null) {
+        CircularProgressIndicator(
+            modifier = Modifier.width(dimensionResource(R.dimen.icon_size_medium)),
+            color = MaterialTheme.colorScheme.secondary,
+            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+        )
+        return
+
+    }
+    if (post?.isError() == true) {
+        Text("Пост не прогрузился, сорян")
+        return
+    }
+
     Scaffold(
         topBar = {
             PostScreenTopBar(
                 navController = navController,
-                post = post,
+                post = post!!.unwrap(),
                 onLikeClick = viewModel::toggleLike
             )
         }
@@ -49,15 +63,16 @@ fun PostScreen(
                 .padding(padding)
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            if (post.id == -1) {
+            if (post!!.unwrap().id == -1) {
                 PostNotFound()
             } else {
                 PostList(
-                    post = post,
+                    post = post!!.unwrap(),
                     onLikeClick = viewModel::toggleLike,
                     viewModel = viewModel
                 )
             }
+
         }
     }
 }
@@ -70,7 +85,7 @@ private fun PostScreenTopBar(
     onLikeClick: () -> Unit
 ) {
     TopAppBar(
-        title = { Text(post.title) },
+        title = { Text(post.title ?: "") },
         navigationIcon = {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
@@ -81,9 +96,9 @@ private fun PostScreenTopBar(
         actions = {
             IconButton(onClick = onLikeClick) {
                 Icon(
-                    imageVector = if (post.isLiked) Icons.Filled.Favorite else Icons.Outlined.Favorite,
+                    imageVector = if (post.isLiked == true) Icons.Filled.Favorite else Icons.Outlined.Favorite,
                     contentDescription = stringResource(R.string.like),
-                    tint = if (post.isLiked) Color.Red else MaterialTheme.colorScheme.onSurface
+                    tint = if (post.isLiked == true) Color.Red else MaterialTheme.colorScheme.onSurface
                 )
             }
         }
@@ -160,13 +175,13 @@ private fun ExpandableComments(comments: List<Comment>, viewModel: PostViewModel
 fun PostDetails(post: Post, onLikeClick: () -> Unit) {
     Column {
         Text(
-            text = post.title,
+            text = post.title ?: "",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacer_height_small)))
         Text(
-            text = post.description,
+            text = post.body ?: "",
             style = MaterialTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.spacer_height_medium)))

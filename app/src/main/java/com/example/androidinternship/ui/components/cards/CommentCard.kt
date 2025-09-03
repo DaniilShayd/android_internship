@@ -20,12 +20,12 @@ fun CommentCard(comment: Comment) {
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
         ) {
             Text(
-                text = comment.userName,
+                text = comment.name ?: "",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
             )
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_smallest)))
-            Text(text = comment.text, style = MaterialTheme.typography.bodyMedium)
+            Text(text = comment.body ?: "", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

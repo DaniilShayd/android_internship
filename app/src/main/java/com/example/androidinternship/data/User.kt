@@ -1,10 +1,16 @@
 package com.example.androidinternship.data
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class User(
-    val id: Int,
-    val nickname: String,
-    val name: String,
-    val address: String,
-    val phoneNumber: String,
-    val comments: List<Comment> = emptyList()
+    val id: Int? = null,
+    val name: String? = null,
+    val username: String? = null,
+    val email: String? = null,
+    val address: Address? = null,
+    val phone: String? = null,
+    val website: String? = null,
+    val company: Company? = null,
+    val comments: List<Comment> = emptyList(),
 )

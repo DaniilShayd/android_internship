@@ -3,8 +3,9 @@ package com.example.androidinternship.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Album(
+data class Todo(
+    val userId: Int? = null,
     val id: Int? = null,
     val title: String? = null,
-    val userId: String? = null,
+    val completed: Boolean? = null,
 )

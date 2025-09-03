@@ -1,17 +1,34 @@
 package com.example.androidinternship.ui.screens.album
 
 import androidx.lifecycle.ViewModel
-import com.example.androidinternship.data.Album
+import androidx.lifecycle.viewModelScope
+import com.example.androidinternship.data.Photo
 import com.example.androidinternship.domain.repositories.AlbumsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class AlbumViewModel(
-    albumId: Int,
-    repository: AlbumsRepository = AlbumsRepository()
+    private val albumId: Int,
+    private val repository: AlbumsRepository = AlbumsRepository()
 ) : ViewModel() {
 
-    private val _album = MutableStateFlow(repository.loadAlbum(albumId = albumId))
-    val album: StateFlow<Album?> = _album.asStateFlow()
+    private val _photos = MutableStateFlow<List<Photo>>(emptyList())
+    val photos: StateFlow<List<Photo>> = _photos.asStateFlow()
+
+    init {
+        refreshPhotos()
+    }
+
+    private fun refreshPhotos() {
+        viewModelScope.launch {
+            try {
+                _photos.value = repository.getAlbumPhotos(albumId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _photos.value = emptyList()
+            }
+        }
+    }
 }
