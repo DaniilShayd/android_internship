@@ -1,7 +1,7 @@
 package com.example.androidinternship.ui.screens.photo
 
 import androidx.lifecycle.ViewModel
-import com.example.androidinternship.domain.repositories.AlbumsRepository
+import com.example.domain.repositories.AlbumsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

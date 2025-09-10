@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.androidinternship.R
-import com.example.androidinternship.data.User
+import com.example.domain.data.User
 import com.example.androidinternship.ui.components.NestedScreenAppBar
 import com.example.androidinternship.ui.components.cards.CommentCard
 import com.example.androidinternship.ui.composables.UIButton

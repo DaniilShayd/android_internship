@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.example.androidinternship.R
-import com.example.androidinternship.data.Comment
+import com.example.domain.data.Comment
 
 @Composable
 fun CommentCard(comment: Comment) {

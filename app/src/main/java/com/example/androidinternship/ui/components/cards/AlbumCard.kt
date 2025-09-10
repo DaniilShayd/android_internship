@@ -8,15 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.androidinternship.R
-import com.example.androidinternship.data.Album
-import com.example.androidinternship.navigation.NavElements
-import com.example.androidinternship.navigation.NavRoutes
 
 @Composable
-fun AlbumCard (album: Album, navController: NavController) {
+fun AlbumCard (album: com.example.domain.data.Album, navController: NavController) {
     Card(
         onClick = { navController.navigate("album/${album.id}") },
         modifier = Modifier

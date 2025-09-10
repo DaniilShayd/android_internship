@@ -2,12 +2,12 @@ package com.example.androidinternship.ui.screens.user
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.androidinternship.data.User
-import com.example.androidinternship.domain.repositories.CommentsRepository
-import com.example.androidinternship.domain.repositories.UsersRepository
-import com.example.androidinternship.utils.ErrorData
-import com.example.androidinternship.utils.StatefulData
-import com.example.androidinternship.utils.SuccessData
+import com.example.domain.data.User
+import com.example.domain.utils.ErrorData
+import com.example.domain.utils.StatefulData
+import com.example.domain.utils.SuccessData
+import com.example.domain.repositories.CommentsRepository
+import com.example.domain.repositories.UsersRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

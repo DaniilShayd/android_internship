@@ -9,7 +9,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.example.androidinternship.R
-import com.example.androidinternship.data.Post
+import com.example.domain.data.Post
 import com.example.androidinternship.ui.components.PostCardBottomInfo
 
 @Composable

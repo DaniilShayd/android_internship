@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "androidInternship"
 include(":app")
+include(":domain")

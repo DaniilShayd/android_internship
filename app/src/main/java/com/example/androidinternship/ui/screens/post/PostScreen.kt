@@ -13,8 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
-import com.example.androidinternship.data.*
-import com.example.androidinternship.resources.AppSettings.COMMENTS_SHOW_LIMIT
+import com.example.domain.resources.AppSettings.COMMENTS_SHOW_LIMIT
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.example.androidinternship.R
@@ -26,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.domain.data.*
 
 @Composable
 fun PostScreen(
